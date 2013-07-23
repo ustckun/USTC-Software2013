@@ -3,10 +3,8 @@ USTC-Software 2013
 
 iGEM 2013
 
-It is a software team in iGEM 2013!
-We come from USTC, China.
 
-This project is a application of modeling the gene network!
+We are USTC-Software, a team from University of Science and Technology of China. We will be competing in iGem 2013!
 
-We analyze the stability of a network when a new gene outside insert. 
-Also, if users give us their goal of original network, this software could figure out the possible regualtion of new gene.
+
+Our application aims to simulate genetic networks. The application analyzes the stability of genetic networks after introduction of exogenous genes. Meanwhile, given the original network and specific purposes, the application traces the regulative process back and gives possible regulative patterns.

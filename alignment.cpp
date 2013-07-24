@@ -5,7 +5,7 @@
 //  Created by jinyang on 13-7-19.
 //  Copyright (c) 2013年 jinyang. All rights reserved.
 //
-//********************************************************************************
+//*******************************************************************************
 // Some explain for GRN:
 //  1.For sequence-alignment module, GRN is obtained from data-capture module;
 //  2.The GRN matrix: line for REGULATOR, row for TARGET;
@@ -13,7 +13,7 @@
 //  4.i.e.
 //      If gene_A enhances gene_B, then the matrix records it as:
 //      GRN[index_B][index_A] = 1;
-//********************************************************************************
+//*******************************************************************************
 #include <iostream>
 #include <fstream>
 #include <sstream>

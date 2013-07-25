@@ -2,12 +2,12 @@
 #include <iomanip>
 #include <fstream>
 #include <cmath>
-#include <stdlib.h>
+#include <cstdlib>
 #include <ctime>
 #define N 100                                   //统计次数
 #define PETS 256                                //步长的倒数
-#define STEP 1.0/PETS                           //步长
-#define MAXTIME 10000                           //最大时间
+#define STEP (1.0/PETS)                           //步长
+#define MAXTIME 1000                            //最大时间
 #define INITIALVALUE 2                          //初值
 #define DIMENS 170                              //网络最大规模
 
@@ -15,12 +15,8 @@
 //结构体S_FList存放统计表;0——100分分为20个区间，score为3,8,13,18.....
 using namespace std;
 
-struct S_FList
-{
-    double score,frequency;
-};
 
-inline void RandMatrix(double a[][DIMENS],int b[][DIMENS],const int n)
+inline void RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n)
 //拿一个调控矩阵产生系数矩阵，系数取+-6 7 8 9 10或者0;新基因调控关系可以取到+-3 4 5
 //a[][]为输入矩阵,b[][]为输出矩阵,用数组形参输出,旧网络的规模为n.
 {
@@ -34,12 +30,12 @@ inline void RandMatrix(double a[][DIMENS],int b[][DIMENS],const int n)
             m1=(int)a[i1][j1];
             switch(m1)
             {
-                case 1:b[i1][j1]=rand()%5+6;break;//positive regulate
-                case -1:b[i1][j1]=-rand()%5-6;break;//negtive regulate
+                case 1:b[i1][j1]=(double)(rand()%101)/25.0+2.0;break;//positive regulate
+                case -1:b[i1][j1]=-(double)(rand()%101)/25.0-2.0;break;//negtive regulate
                 case 2:b[i1][j1]=0;break;               //no regulation
                 default :m1=rand()%2;                //其他,即正负都有
-                if(m1)b[i1][j1]=rand()%5+5;
-                else b[i1][j1]=-rand()%5-5;
+                if(m1)b[i1][j1]=(double)(rand()%101)/25.0+2.0;
+                else b[i1][j1]=-(double)(rand()%101)/25.0-2.0;
             }
         }
         else                               //新基因调控关系的系数
@@ -54,7 +50,7 @@ inline void RandMatrix(double a[][DIMENS],int b[][DIMENS],const int n)
     }
 }
 
-double FaNexVal(int Matr[][DIMENS],double a[],const int n,const int i,    double p[],double q[],double nn[],double r[])
+double FaNexVal(double Matr[][DIMENS],double a[],const int n,const int i,    double p[],double q[],double nn[],double r[])
 //矩形积分的下一个增量值,Matr[][]给出系数,a[]给出自己的浓度,n为旧网络规模,i为要增加的分量,p[]nn[]r[]为系数数组
 {
     int j;
@@ -63,8 +59,8 @@ double FaNexVal(int Matr[][DIMENS],double a[],const int n,const int i,    double
     m[2]=0;m[1]=0;
     for(j=0;j<n;++j)
     {
-        if(Matr[j][i]>0)m[1]+=((double)Matr[j][i])*pow(a[j],3);       //正调控
-        else if(Matr[j][i]<0)m[2]+=fabs((double)Matr[j][i])*pow(a[j],3);  //负调控
+        if(Matr[j][i]>0)m[1]+=pow(a[j],Matr[j][i]);       //正调控
+        else if(Matr[j][i]<0)m[2]+=pow(a[j],-Matr[j][i]);  //负调控
     }
     if(m[1]==0)
     m[0]+=(p[i]/(nn[i])+q[i]/(nn[i]+m[2]));                   //总公式,即增量总和
@@ -72,7 +68,7 @@ double FaNexVal(int Matr[][DIMENS],double a[],const int n,const int i,    double
     return m[0];
 }
 
-double NextValue(int Matr[][DIMENS],double a[],const int n,const int i,    double p[],double q[],double nn[],double r[])
+double NextValue(double Matr[][DIMENS],double a[],const int n,const int i,    double p[],double q[],double nn[],double r[])
 //梯形积分，形参意义同上
 {
     int j;double b[DIMENS];//作为暂时空间
@@ -81,18 +77,23 @@ double NextValue(int Matr[][DIMENS],double a[],const int n,const int i,    doubl
     return FaNexVal(Matr,b,n,i,p,q,nn,r);
 }
 
-void Network_1(double ReguMatrix[][DIMENS],int MaxMa[][DIMENS],struct S_FList S_Freq[],int n,double p[],double q[],double nn[],double r[])
+void Network_1(double ReguMatrix[][DIMENS],double MaxMa[][DIMENS],int n)
 //参数意义:ReguMatrix[][]作为调控矩阵,MaxMa[][]输出最大分数的系数矩阵
 //S_Freq[]输出分数-频率表,结构体见前;n为旧网络规模.其余数组意义同上
 {
     double a[DIMENS],b[DIMENS],c[DIMENS],d[DIMENS],e[DIMENS],f[DIMENS],sum(0),AbsValue(1),MaxScore(0),Score(0);
+    double p[DIMENS],q[DIMENS],r[DIMENS],nn[DIMENS],FenShu[100];
     //a[]b[]c[]d[]临时记录表达产物的浓度值,交替迭代
     //AbsValue用来记录反应过程中相邻两个时刻的差值,检查平衡
     //MaxScore记录最大分数,Score记录分数
-    int i(0),j=0,cou(0),k(0),TempMatrix[DIMENS][DIMENS];
+    int i(0),j=0,cou(0),k(0);double TempMatrix[DIMENS][DIMENS];
     //cou记录反应时间,j记录迭代次数,k记录分数-频率统计次数,TempMatrix[][]记录临时产生的(n+1)*(n+1)的系数矩阵
 
-    for(i=0;i<20;++i)S_Freq[i].score=i*5+3;     //分数取组内中值
+    for(i=0;i<DIMENS;++i)                       //设置系数
+    {
+        p[i]=6;q[i]=3;r[i]=1.5;nn[i]=3;
+    }
+    for(i=0;i<100;++i)FenShu[i]=0;
     for(i=0;i<n;++i)a[i]=b[i]=e[i]=INITIALVALUE;               //初始化浓度
     while(k<N)                                  //统计次数小于预定值
     {
@@ -131,9 +132,9 @@ void Network_1(double ReguMatrix[][DIMENS],int MaxMa[][DIMENS],struct S_FList S_
             }
             if(j%PETS==0){j=0;++cou;}
         }
-        if(cou>=MAXTIME){sum+=1;break;}                         //如果新网络没有稳定,直接跳过
+        if(cou>=MAXTIME){sum+=1;FenShu[0]+=1;break;}                         //如果新网络没有稳定,直接跳过
         AbsValue=0;
-        for(i=0;i<n;++i)AbsValue+=fabs(c[i]-a[i]);              //计算新旧网络的浓度差
+        for(i=0;i<n;++i)AbsValue+=(fabs(c[i]-a[i]))/(c[i]>a[i]?a[i]:c[i]);              //计算新旧网络的浓度差
         Score=1-AbsValue*AbsValue/(n*n/9.0+AbsValue*AbsValue);  //每一种物质都差一倍基本上就废了
         Score*=100;
         Score*=(1-(pow(((double)cou)/MAXTIME,3)));
@@ -144,9 +145,14 @@ void Network_1(double ReguMatrix[][DIMENS],int MaxMa[][DIMENS],struct S_FList S_
             MaxMa[i][j]=TempMatrix[i][j];
             MaxScore=Score;
         }
-        S_Freq[((int)Score)%20].frequency+=1;                   //记录分数
+        FenShu[(int)Score]+=1;                   //记录分数
     }
-    for(i=0;i<20;++i)S_Freq[i].frequency/=sum;                  //sum为有结果的次数
+    for(i=0;i<100;++i)FenShu[i]/=sum;                  //sum为有结果的次数
+    ofstream fi1;
+    fi1.open("fenshu.txt");
+    for(i=0;i<100;++i)
+        fi1<<i+0.5<<' '<<FenShu[i]<<endl;//输出频率分数表
+    fi1.close();
     //由最大分数的系数矩阵跑新网络的时间-浓度放到txt里面
     for(i=0;i<n;++i)a[i]=b[i]=e[i]=INITIALVALUE;                               //赋初值
     AbsValue=10;
@@ -165,16 +171,19 @@ void Network_1(double ReguMatrix[][DIMENS],int MaxMa[][DIMENS],struct S_FList S_
         if(j%PETS==0){++cou;j=0;}
     }
     for(i=0;i<n;++i){c[i]=d[i]=f[i]=a[i];c[n]+=a[i];}
-    c[n]/=n;d[n]=f[n]=c[n];cou=0;AbsValue=1;
+    c[n]/=n;d[n]=f[n]=c[n];
     ofstream igemSfw;
     igemSfw.open("ustcsoftware.txt");
     if(!igemSfw)exit(0);
-    j=0;
+    j=0;cou=0;AbsValue=1;
     while(AbsValue>0.0000001&&cou<MAXTIME)              //跑新网络
     {
         ++j;
         for(i=0;i<n+1;++i){c[i]+=NextValue(TempMatrix,d,n+1,i,p,q,nn,r)*STEP;}
         for(i=0;i<n+1;++i)d[i]=c[i];
+        igemSfw<<cou+j*STEP<<' ';
+        for(i=0;i<n;++i)igemSfw<<c[i]<<' '<<flush;
+        igemSfw<<c[n]<<endl;
         if(j%100==0)
         {
             AbsValue=0;
@@ -184,21 +193,23 @@ void Network_1(double ReguMatrix[][DIMENS],int MaxMa[][DIMENS],struct S_FList S_
         if(j%(PETS)==0)
         {
             ++cou;j=0;
-            for(i=0;i<n;++i)igemSfw<<c[i]<<' '<<flush;
-            igemSfw<<c[n]<<endl;
         }
     }
 }
 
 
 
-void Network_2(int Matr[][DIMENS],int n,double a[],    double p[],double q[],double nn[],double r[])
+void Network_2(double Matr[][DIMENS],int n,double a[])
 //输入系数矩阵和网络规模,输出稳定物质.若不能稳定或者稳定时间太长,则a[]所有值置为-1,
 //p[] q[] nn[] r[]意义同上
 {
-    int i,j=0,cou=0;
+    int i,j=0,cou=0;double p[DIMENS], q[DIMENS], nn[DIMENS], r[DIMENS];
     double b[DIMENS],AbsValue=10, c[DIMENS];
     for(i=0;i<n;++i){a[i]=INITIALVALUE;b[i]=a[i];c[i]=b[i];}
+    for(i=0;i<DIMENS;++i)                       //设置系数
+    {
+        p[i]=6;q[i]=3;r[i]=1.5;nn[i]=3;
+    }
     while(AbsValue>0.0000001&&cou<MAXTIME)  // 没有稳定且反应时间没有达到预定时间
     {
         ++j;

@@ -6,10 +6,12 @@
 #include"Regulation.h"
 #include"EasytoDebug.h"
 
-void EasytoDebug::fetch()
+void EasytoDebug::fetch(FILE *temp)
 {
-	ifstream temp("sequence");
-	temp>>number>>sequence;
+	//ifstream temp("Sequence");
+	char *s=new char;
+	fscanf(temp,"%d	%s",&number,s);
+	sequence=s;
 	length=sequence.length();
 }
 

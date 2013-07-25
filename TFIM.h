@@ -7,6 +7,7 @@
 #include<string>
 #include<vector>
 #include<algorithm>
+#define N 170
 using namespace std;
 
 class TFIM
@@ -14,7 +15,7 @@ class TFIM
 public:
 	int geneNumber;//get from Regulation
 	char *name;//get from Regulation
-	void getGeneInformation();
+	void getGeneInformation(FILE *fp);
 	char *getID();
 	char *getGeneSequence();
 	char *getLeftPosition();

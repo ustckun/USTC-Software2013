@@ -9,7 +9,7 @@ public:
 	int getNumber();
 	int getLength();
 	string getSequence();
-	void fetch();
+	void fetch(FILE *temp);
 private:
 	int number;
 	int length;

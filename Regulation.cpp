@@ -23,7 +23,7 @@
 #include"Regulation.h"
 #include"EasytoDebug.h"
 
-#define N 200
+
 //input:objexts of TFIM, read name and also get regulation, if file is not open int openFileError will be 1
 void Regulation::readName(TFIM geneFirst[])
 {

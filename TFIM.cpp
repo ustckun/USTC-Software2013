@@ -51,10 +51,10 @@ int easyFind(char *a,char *b)
 }
 
 //get 166 genes information in database
-void TFIM::getGeneInformation()
+void TFIM::getGeneInformation(FILE *fp)
 {
 	ifstream data("TFIM");
-	ofstream text("Sequence");
+	//ofstream text("Sequence");
 	if(!data)
 	{
 		getError=1;
@@ -113,7 +113,9 @@ void TFIM::getGeneInformation()
 			p=strtok(NULL,delims);
 			geneSequence=p;
 			i=aM+1;
-			text<<geneNumber<<"	"<<geneSequence<<endl;
+			//text.seekp(text.end);
+			//text<<geneNumber<<"	"<<geneSequence<<endl;
+			fprintf(fp,"%d	%s\n",geneNumber,geneSequence);
 		}
 		//cout<<i<<endl;
 	}

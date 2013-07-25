@@ -1,27 +1,50 @@
+// Regulation.cpp
+// Get regualtion matrix and 166 genes' names
+//
+// version 2.0
+// change:
+// 1.add output to txt module
+// 2.add notation
+//
+//**********************************************************************************
+//this module read TF-TF regualtion from RegulonDB database
+//transform + - to +1 -1 and 0 if not relationships it will be 2
+//filter the name to class TFIM::geneName
+//**********************************************************************************
+//
+//interface:
+//int getGeneAmount():all gene number
+//float	originalMartix[200][200]:genes' regualtion
+//A to B 's regulation is originalMatrix[B][A]
+
+
+
 #include"TFIM.h"
 #include"Regulation.h"
-#define N 10
-void Regulation::readName(TFIM *geneFirst)
+#include"EasytoDebug.h"
+
+#define N 200
+//input:objexts of TFIM, read name and also get regulation, if file is not open int openFileError will be 1
+void Regulation::readName(TFIM geneFirst[])
 {
-	ifstream data("TF-TF.txt");
+	ifstream data("TF-TF");
 	if(!data)
 	{
 		openFileError=1;
 	}
+	else
+		openFileError=0;
 	char ch;
-	int i,m,num=0;
+	int i,num=0;
 	int geneAM;
 	char *Name;
-	char STRING1[10];
+	char STRING1[N][10];
 	float originalMA[N][N];
-	for(i=1;i<N;)
+	data.get(ch);
+	for(i=0;i<N;)
 	{
 		int a,b;
-		if(!data.get(ch))
-		{
-			geneAM=i;
-			i=N;
-		}
+		//data.get(ch);
 		while(ch=='#')//filter RegulonDB line
 		{
 			string noUse;
@@ -30,14 +53,14 @@ void Regulation::readName(TFIM *geneFirst)
 		}
 		while(ch!='	')
 		{
-			STRING1[num]=ch;
+			STRING1[i][num]=ch;
 			data.get(ch);
 			num++;
 		}
-		STRING1[num]='\0';
-		Name=STRING1;
+		STRING1[i][num]='\0';
+		Name=STRING1[i];
 		int j;
-		for(j=1;j<i;j++)
+		for(j=0;j<i;j++)
 		{
 			strlwr(geneFirst[j].name);
 			strlwr(Name);
@@ -47,9 +70,10 @@ void Regulation::readName(TFIM *geneFirst)
 				j=i+1;
 			}
 		}
-		if(j!=i+1)
+		if(j==i)
 		{
 			geneFirst[i].name=Name;
+			geneFirst[i].putName();
 			geneFirst[i].geneNumber=i;
 			a=i;
 			i++;
@@ -58,13 +82,13 @@ void Regulation::readName(TFIM *geneFirst)
 		num=0;
 		while(ch!='	')
 		{
-			STRING1[num]=ch;
+			STRING1[i][num]=ch;
 			data.get(ch);
 			num++;
 		}
-		STRING1[num]='\0';
-		Name=STRING1;
-		for(j=1;j<i;j++)
+		STRING1[i][num]='\0';
+		Name=STRING1[i];
+		for(j=0;j<i;j++)
 		{
 			strlwr(geneFirst[j].name);
 			strlwr(Name);
@@ -74,19 +98,21 @@ void Regulation::readName(TFIM *geneFirst)
 				j=i+1;
 			}
 		}
-		if(j!=i+1)
+		if(j==i)
 		{
 			geneFirst[i].name=Name;
+			geneFirst[i].putName();
 			geneFirst[i].geneNumber=i;
-			a=i;
+			b=i;
 			i++;
 		}
+		//geneFirst[i].putName();
 		data.get(ch);
 		if(ch=='-')
 		{
-			if(originalMA[b][a]==1||originalMA[b][a]==0.5)
+			if(originalMA[b][a]==1||originalMA[b][a]==0)
 			{
-				originalMA[b][a]=0.5;
+				originalMA[b][a]=0;
 			}
 			else
 				originalMA[b][a]=-1;
@@ -95,39 +121,52 @@ void Regulation::readName(TFIM *geneFirst)
 		{
 			data.get(ch);
 			if(ch=='-')
-				originalMA[b][a]=0.5;
+				originalMA[b][a]=0;
 			else
 				originalMA[b][a]=1;
 		}
 		else
-			originalMA[b][a]=0;
+			originalMA[b][a]=2;
 		string noUse;
 		getline(data,noUse);
+		num=0;
+		if(!data.get(ch))
+		{
+			geneAM=i;
+			i=N;
+		}
 	}
-	originalMatrix=&originalMA[0][0];
+	memcpy((char *)originalMatrix,(char *)originalMA,sizeof(float)*N*N);
+	//originalMatrix=originalMA;
 	geneAmount=geneAM;
 }
 
+//full fill the matrix with 2
 void Regulation::fullFill()
 {
 	float a;
 	int n;
-	a=*originalMatrix;
-	for(n=0;n<N*N;n++)
+//	a=originalMatrix[0][0];
+	for(n=0;n<N;n++)
 	{
-		if(a!=1.0||a!=0.0||a!=0.5||a!=-1.0)
+		for(int m=0;m<N;m++)
 		{
-			*originalMatrix=0;
+			a=originalMatrix[m][n];
+			if(a!=1.0&&a!=0.0&&a!=-1.0&&a!=2.0)
+			{
+				originalMatrix[m][n]=2;
+			}
 		}
-		a=*originalMatrix++;
 	}
 }
 
+//get amount of genes
 int Regulation::getGeneAmount()
 {
 	return geneAmount;
 }
 
+//know is file opened
 int Regulation::getOpenError()
 {
 	return openFileError;

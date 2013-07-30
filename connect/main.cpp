@@ -1,6 +1,6 @@
 #include"TFIM.h"
 //#include"calculation.h"
-
+#include"Calculate.h"
 #include"Regulation.h"
 #include"EasytoDebug.h"
 #include"Sequence.h"

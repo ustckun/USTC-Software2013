@@ -7,6 +7,7 @@
 //
 
 #include"TFIM.h"
+#include"Calculate.h"
 //#include"calculation.h"
 #include"Sequence.h"
 #include"GRN.h"

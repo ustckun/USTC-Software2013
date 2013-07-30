@@ -126,5 +126,12 @@ int Sequence::translate(char s){
         return 3;
     }
 }
-    
+
+void Sequence::getNewASS(string insertGene)
+{
+	geneNumber=165+1;
+	DNASize=insertGene.length()*3+3;
+	aminoASSize=insertGene.length();
+	geneSequence=insertGene;
+}
 

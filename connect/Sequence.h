@@ -27,6 +27,7 @@ public:
     int geneNumber;
     int DNASize;
     int aminoASSize;
+	void getNewASS(string insertGene);
 private:
     std::string geneSequence;
     //std::string RNASequence;

@@ -22,6 +22,7 @@
 #define INITIALVALUE 2.5                          //initial value
 #define DIMENS 170    
 #define N 170
+#define scale 170
 using namespace std;
 
 class TFIM

@@ -1,10 +1,9 @@
 #include"TFIM.h"
-//#include"calculation.h"
 #include"Calculate.h"
 #include"Regulation.h"
 #include"EasytoDebug.h"
 #include"Sequence.h"
-//#include"GRN.h"
+#include"GRN.h"
 
 int main()
 {
@@ -12,6 +11,10 @@ int main()
 	Regulation Hope;
 	Hope.readName(test);
 	Hope.fullFill();
+	//Calculate xinyu;
+	//xinyu.Network_1(Hope.originalMatrix,166);
+	//xinyu.Network_2(Hope.originalMatrix,166);
+	//cout<<xinyu.nong[90];
 	int A,C;
 	string B;
 	FILE *fp;
@@ -29,7 +32,7 @@ int main()
 	Sequence good[N];
 	fp=fopen("DNA","r");
 	//fp1=fopen("AAS","w");
-	ofstream data("AAS");
+	//ofstream data("AAS");
 	for(int i=0;i<Hope.getGeneAmount();i++)
 	{
 		//test[i].getGeneInformation(fp);
@@ -41,7 +44,23 @@ int main()
 		//C=B.length();
 		good[i].initializeGeneSequence(B,A,C);
 		B=good[i].getAminoAcidSequence();
-		data<<A<<"	"<<B<<endl;
+		cout<<A<<"	"<<B<<endl;
+	}
+	fclose(fp);
+	//data.close();
+	ofstream RN("newGRN");
+	string insertGene="mskgeelftgvvpilveldgdvnghkfsvsgegegdatygkltlkficttgklpvpwptlvttfaygvqcfsrypdhmkrhdffksampegyvqertiffkddgnyktraevkfegdtlvnrielkgidfkedgnilghkleynynshnvyimadkqkngikvnfkirhniedgsvqladhyqqntpigdgpvllpdnhylstqsvlskdpnekrdhmvllefvtaagithgmdelyk";
+	GRN newGRN;
+	newGRN.initializeGRN(Hope.originalMatrix,Hope.getGeneAmount());
+	good[166].getNewASS(insertGene);
+	newGRN.constructNewGRN(good);
+	for(int j=0;j<N;j++)
+	{
+		for(int i=0;i<N;i++)
+		{
+			RN<<newGRN.newGRNCorrelation[j][i]<<"	";
+		}
+		RN<<endl;
 	}
 	//test[30].getGeneInformation();
 	//test[31].getGeneInformation();

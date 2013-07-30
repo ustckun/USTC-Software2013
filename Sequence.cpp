@@ -15,12 +15,6 @@ void Sequence::initializeGeneSequence( std::string sequence,int number, int size
     aminoASSize = size / 3 - 1;
     //RNASequence +=sequence;
 }
-//get gene amino acid sequence;
-std::string Sequence::getAminoAcidSequence(){
-        //transcription();
-    translation();
-    return aminoAcidSequence;
-}
     
 //****************************************************************************************
 //  Some explain of the transcription and translation process:
@@ -90,7 +84,8 @@ void Sequence::translation(){
     int index[3] = { 0 };
     aminoAcidSequence = " ";
     //If need to use transcription module, replace geneSequence with RNASquence;
-    for (int i = 1; i != geneSequence.size(); i += 3) {
+    for (int i = 1; i < DNASize; i += 3) {
+        //std::cout << i << std::endl;
         mRNA[0] = geneSequence[i];
         mRNA[1] = geneSequence[i + 1];
         mRNA[2] = geneSequence[i + 2];

@@ -22,20 +22,18 @@ public:
         //RNASequence = " ";
     }
     void initializeGeneSequence( std::string sequence,int number, int size );
-    //get gene amino acid sequence;
-    std::string getAminoAcidSequence();
+    std::string aminoAcidSequence;
     int geneNumber;
     int DNASize;
     int aminoASSize;
+    //translate RNA sequence into amino acid sequence;
+    void translation();
 private:
     std::string geneSequence;
     //std::string RNASequence;
-    std::string aminoAcidSequence;
     //transcript gene sequence(DNA) into RNA sequence;
     //void transcription();
     
-    //translate RNA sequence into amino acid sequence;
-    void translation();
     int translate(char s);
 };
 

@@ -33,6 +33,8 @@ void GRN::constructNewGRN(Sequence seqArry[]){
         if (counter != 0) {
             newGRNCorrelation[matrixSize][j_geneNum] = newGRNCorrelation[matrixSize][j_geneNum] / counter;
         }
+        else
+            newGRNCorrelation[matrixSize][j_geneNum] = 2;
     }
     //insert new correlations to (matrixSize + 1) column;
     for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
@@ -47,6 +49,8 @@ void GRN::constructNewGRN(Sequence seqArry[]){
         if (counter != 0) {
             newGRNCorrelation[i_geneNum][matrixSize] = newGRNCorrelation[i_geneNum][matrixSize] / counter;
         }
+        else
+            newGRNCorrelation[i_geneNum][matrixSize] = 2;
     }
     newGRNCorrelation[matrixSize][matrixSize] = 0;
 }

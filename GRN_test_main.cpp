@@ -99,6 +99,7 @@ int main(){
         }
         outfile << endl;
     }
+ 
 //=======================================================================================;
 /*    Sequence debug;
     string s;
@@ -118,7 +119,5 @@ int main(){
     cout << "Sequence_AAS size is:" << debug.aminoAcidSequence.size() << endl;
     cout << "Sequence_AAS_size is:" << debug.aminoASSize <<endl;
 */
-    
-    
 }
 

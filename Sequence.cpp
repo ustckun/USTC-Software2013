@@ -11,8 +11,12 @@
 void Sequence::initializeGeneSequence( std::string sequence,int number, int size ){
     geneSequence += sequence;
     geneNumber = number;
-    DNASize = size;
-    aminoASSize = size / 3 - 1;
+    
+    //DNASize = size;
+    //aminoAcidSequence = size / 3 - 1;
+    
+    DNASize = size; //This is the size of DNA sequence and DOES NOT includes space.
+    aminoASSize = size / 3 - 1 + 1;//'_EXAMPLE#':8 - 1(termination codon) + 1(space);
     //RNASequence +=sequence;
 }
     

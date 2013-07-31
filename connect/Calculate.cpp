@@ -1,11 +1,10 @@
 
 #include"TFIM.h"
-//#include"calculation.h"
 #include"Calculate.h"
-#include"Sequence.h"
-#include"GRN.h"
 #include"Regulation.h"
 #include"EasytoDebug.h"
+#include"Sequence.h"
+#include"GRN.h"
 
 
 
@@ -137,7 +136,7 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
     }
     for(i=0;i<101;++i)FenShu[i]/=sum;                 
     ofstream fi1;
-    fi1.open("fenshu.txt");
+    fi1.open("Score");
     for(i=0;i<101;++i)
         fi1<<i+0.5<<' '<<FenShu[i]<<endl;
     fi1.close();

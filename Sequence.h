@@ -22,6 +22,7 @@ public:
         //RNASequence = " ";
     }
     void initializeGeneSequence( std::string sequence,int number, int size );
+    std::string geneSequence;
     std::string aminoAcidSequence;
     int geneNumber;
     int DNASize;
@@ -29,7 +30,6 @@ public:
     //translate RNA sequence into amino acid sequence;
     void translation();
 private:
-    std::string geneSequence;
     //std::string RNASequence;
     //transcript gene sequence(DNA) into RNA sequence;
     //void transcription();

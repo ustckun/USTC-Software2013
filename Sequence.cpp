@@ -11,6 +11,10 @@
 void Sequence::initializeGeneSequence( std::string sequence,int number, int size ){
     geneSequence += sequence;
     geneNumber = number;
+    
+    //DNASize = size;
+    //aminoAcidSequence = size / 3 - 1;
+    
     DNASize = size;
     aminoASSize = size / 3 - 1;
     //RNASequence +=sequence;

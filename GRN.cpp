@@ -9,6 +9,7 @@
 #include "GRN.h"
 #include <vector>
 #include <string>
+#define gap 0
 void GRN::initializeGRN(double oldGRN[][scale], int mSize){
     for (int i = 0; i != scale; ++i) {
         for (int j = 0; j != scale; ++j) {
@@ -24,31 +25,39 @@ void GRN::constructNewGRN(Sequence seqArry[]){
         int counter = 0;
         newGRNCorrelation[matrixSize][j_geneNum] = 0;
         for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
-            newGRNCorrelation[matrixSize][j_geneNum] += newGRNCorrelation[i_geneNum][j_geneNum] * aminoASAlignment(seqArry[matrixSize ].aminoAcidSequence, seqArry[matrixSize].aminoASSize, seqArry[j_geneNum].aminoAcidSequence, seqArry[j_geneNum].aminoASSize);
             if (newGRNCorrelation[i_geneNum][j_geneNum] != 2) {
+                newGRNCorrelation[matrixSize][j_geneNum] += newGRNCorrelation[i_geneNum][j_geneNum] * aminoASAlignment(seqArry[matrixSize ].aminoAcidSequence, seqArry[matrixSize].aminoASSize, seqArry[j_geneNum].aminoAcidSequence, seqArry[j_geneNum].aminoASSize);
                 counter += 1;
             }
         }
-        newGRNCorrelation[matrixSize][j_geneNum] = newGRNCorrelation[matrixSize][j_geneNum] / counter;
+        if (counter != 0) {
+            newGRNCorrelation[matrixSize][j_geneNum] = newGRNCorrelation[matrixSize][j_geneNum] / counter;
+        }
+        else
+            newGRNCorrelation[matrixSize][j_geneNum] = 2;
     }
     //insert new correlations to (matrixSize + 1) column;
     for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
         int counter = 0;
         newGRNCorrelation[i_geneNum][matrixSize] = 0;
         for (int j_geneNum = 0; j_geneNum != matrixSize; ++j_geneNum) {
-            newGRNCorrelation[i_geneNum][matrixSize] += newGRNCorrelation[matrixSize][j_geneNum] * aminoASAlignment(seqArry[matrixSize].aminoAcidSequence, seqArry[matrixSize].aminoASSize, seqArry[i_geneNum].aminoAcidSequence, seqArry[i_geneNum].aminoASSize);
             if (newGRNCorrelation[i_geneNum][j_geneNum] != 2) {
+                newGRNCorrelation[i_geneNum][matrixSize] += newGRNCorrelation[matrixSize][j_geneNum] * aminoASAlignment(seqArry[matrixSize].aminoAcidSequence, seqArry[matrixSize].aminoASSize, seqArry[i_geneNum].aminoAcidSequence, seqArry[i_geneNum].aminoASSize);
                 counter += 1;
             }
         }
-        newGRNCorrelation[i_geneNum][matrixSize] = newGRNCorrelation[i_geneNum][matrixSize] / counter;
+        if (counter != 0) {
+            newGRNCorrelation[i_geneNum][matrixSize] = newGRNCorrelation[i_geneNum][matrixSize] / counter;
+        }
+        else
+            newGRNCorrelation[i_geneNum][matrixSize] = 2;
     }
     newGRNCorrelation[matrixSize][matrixSize] = 0;
 }
 
 double GRN::aminoASAlignment(std::string s, int s_size, std::string t, int t_size){
-    double G_ = -5;
-    double _G = -5;
+    double G_ = gap;
+    double _G = gap;
     double normalization_s = 0;
     double normalization_t = 0;
     double similarity = 0;
@@ -99,7 +108,7 @@ int GRN::alignScore (char s, char t)
     else if (s != t)
         score = GT;*/
     int score = 0;
-    int G_ = -5;
+    int G_ = gap;
     int index_s = 0;
     int index_t = 0;
 

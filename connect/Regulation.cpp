@@ -41,7 +41,7 @@ void Regulation::readName(TFIM geneFirst[])
 	int geneAM;
 	char *Name;
 	char STRING1[N][10];
-	float originalMA[N][N];
+	double originalMA[N][N];
 	data.get(ch);
 	for(i=0;i<N;)
 	{
@@ -138,7 +138,7 @@ void Regulation::readName(TFIM geneFirst[])
 			i=N;
 		}
 	}
-	memcpy((char *)originalMatrix,(char *)originalMA,sizeof(float)*N*N);
+	memcpy((char *)originalMatrix,(char *)originalMA,sizeof(double)*N*N);
 	//originalMatrix=originalMA;
 	geneAmount=geneAM;
 }

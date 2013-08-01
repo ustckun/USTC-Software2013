@@ -23,6 +23,7 @@
 #define DIMENS 170    
 #define N 170
 #define scale 170
+#define gap 0
 using namespace std;
 
 class TFIM

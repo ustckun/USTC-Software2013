@@ -43,13 +43,14 @@ int main()
 		//B=test[i].getGeneSequence();
 		//C=B.length();
 		good[i].initializeGeneSequence(B,A,C);
-		B=good[i].getAminoAcidSequence();
-		cout<<A<<"	"<<B<<endl;
+		good[i].translation();
+		B=good[i].aminoAcidSequence;
+		//cout<<A<<"	"<<B<<endl;
 	}
 	fclose(fp);
 	//data.close();
 	ofstream RN("newGRN");
-	string insertGene="mskgeelftgvvpilveldgdvnghkfsvsgegegdatygkltlkficttgklpvpwptlvttfaygvqcfsrypdhmkrhdffksampegyvqertiffkddgnyktraevkfegdtlvnrielkgidfkedgnilghkleynynshnvyimadkqkngikvnfkirhniedgsvqladhyqqntpigdgpvllpdnhylstqsvlskdpnekrdhmvllefvtaagithgmdelyk";
+	string insertGene="MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFAYGVQCFSRYPDHMKRHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSVLSKDPNEKRDHMVLLEFVTAAGITHGMDELYK";
 	GRN newGRN;
 	newGRN.initializeGRN(Hope.originalMatrix,Hope.getGeneAmount());
 	good[166].getNewASS(insertGene);

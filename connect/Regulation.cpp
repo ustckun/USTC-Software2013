@@ -21,7 +21,7 @@
 #include"TFIM.h"
 #include"Calculate.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
 

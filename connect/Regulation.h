@@ -4,7 +4,12 @@
 class Regulation
 {
 public:
-	void readName(TFIM geneFirst[]);//read Name in TF-TF.txt to TFIM
+	Regulation()
+	{
+		geneAmount=0;
+		openFileError=0;
+	}
+	void readName(TFIM geneFirst[]);//read Name in TF-TF.txt to TFIM, intput is TFIM projects array
 	int getGeneAmount();
 	void fullFill();
 	int getOpenError();

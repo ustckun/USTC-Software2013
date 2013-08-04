@@ -12,7 +12,7 @@
 #include"Sequence.h"
 #include"GRN.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 
 void Sequence::initializeGeneSequence( std::string sequence,int number, int size ){
     geneSequence += sequence;

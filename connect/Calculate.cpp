@@ -2,7 +2,7 @@
 #include"TFIM.h"
 #include"Calculate.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
 
@@ -191,23 +191,23 @@ void Calculate::Network_2(double Matr[][DIMENS],int n)
 {
     int i,j=0,cou=0;
     double b[DIMENS],AbsValue=10, c[DIMENS];
-    for(i=0;i<n;++i){nong[i]=INITIALVALUE;b[i]=nong[i];c[i]=b[i];}
+    for(i=0;i<n;++i){consistence[i]=INITIALVALUE;b[i]=consistence[i];c[i]=b[i];}
     int pets=PETS;double step=STEP;
     while(AbsValue>0.0000001&&cou<MAXTIME)  
     {
         ++j;
-        for(i=0;i<n;++i){nong[i]+=NextValue(Matr,b,n,i,step,p,q,nn,r)*step;if(nong[i]<0.0000001){cou=MAXTIME+2;break;}}
+        for(i=0;i<n;++i){consistence[i]+=NextValue(Matr,b,n,i,step,p,q,nn,r)*step;if(consistence[i]<0.0000001){cou=MAXTIME+2;break;}}
         if(cou>=MAXTIME)break;                
-        for(i=0;i<n;++i)b[i]=nong[i];
+        for(i=0;i<n;++i)b[i]=consistence[i];
         if(j%(pets/8)==0)
         {
             AbsValue=0;
-            for(i=0;i<n;++i){AbsValue+=fabs(nong[i]-c[i]);}
-            for(i=0;i<n;++i)c[i]=nong[i];
+            for(i=0;i<n;++i){AbsValue+=fabs(consistence[i]-c[i]);}
+            for(i=0;i<n;++i)c[i]=consistence[i];
             if((AbsValue<5)&&(pets==PETS)&&(j==PETS)){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
         }
         if(j%pets==0){++cou;j=0;}
     }
     if(cou>=MAXTIME)                                          
-    for(i=0;i<n+1;++i)nong[i]=-1;
+    for(i=0;i<n+1;++i)consistence[i]=-1;
 }

@@ -1,7 +1,7 @@
 #include"TFIM.h"
 #include"Calculate.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
 
@@ -27,8 +27,8 @@ int main()
 		//cout<<test[i].getGeneSequence()<<endl;
 	}
 	fclose(fp);*/
-	//EasytoDebug read[100];
-	EasytoDebug luck[N];
+	//ReadDNA read[100];
+	ReadDNA luck[N];
 	Sequence good[N];
 	fp=fopen("DNA","r");
 	//fp1=fopen("AAS","w");

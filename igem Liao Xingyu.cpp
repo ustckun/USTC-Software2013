@@ -4,7 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
-#define NN 1                                   //统计次数
+#define NN 100                                   //统计次数
 #define PETS 128                                //步长的倒数
 #define STEP (1.0/PETS)                           //步长
 #define MAXTIME 100                            //最大时间
@@ -62,10 +62,10 @@ inline void RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n)
         else                               //新基因调控关系的系数
         {
             m1=(int)(a[i1][j1]*100);
-            if(rand()%100<m1)k1=m1>0?rand()%6+5:-rand()%6-5;       //调控关系和预测关系相同
-            else if(rand()%5)k1=0;
-            //调控关系和预测关系不同,相反关系和没有关系对半分
-            else k1=-rand()%6-5;
+            if(rand()%100<50+abs(m1)/2)
+                k1=m1>0?(double)(rand()%101)/25.0+2.0:-(double)(rand()%101)/25.0-2.0;
+            else if(rand()%10)k1=0;
+            else k1=m1<0?(double)(rand()%101)/25.0+2.0:-(double)(rand()%101)/25.0-2.0;
             b[i1][j1]=k1;
         }
     }
@@ -104,13 +104,7 @@ void mainFunc::Network_1(double ReguMatrix[][DIMENS],int n)
 {
     double a[DIMENS],b[DIMENS],c[DIMENS],d[DIMENS],e[DIMENS],f[DIMENS],sum(0),AbsValue(1),MaxScore(-1),Score(0);
     double FenShu[101];
-    //a[]b[]c[]d[]临时记录表达产物的浓度值,交替迭代
-    //AbsValue用来记录反应过程中相邻两个时刻的差值,检查平衡
-    //MaxScore记录最大分数,Score记录分数
     int i(0),j=0,cou(0),k(0);double TempMatrix[DIMENS][DIMENS];double step=STEP;int pets=PETS;
-    //cou记录反应时间,j记录迭代次数,k记录分数-频率统计次数,TempMatrix[][]记录临时产生的(n+1)*(n+1)的系数矩阵
-
-
     for(i=0;i<101;++i)FenShu[i]=0;
     for(i=0;i<n;++i)a[i]=b[i]=e[i]=INITIALVALUE;               //初始化浓度
     while(k<NN)                                  //统计次数小于预定值
@@ -139,8 +133,8 @@ void mainFunc::Network_1(double ReguMatrix[][DIMENS],int n)
         }
         step=STEP;pets=PETS;
         if(cou>=MAXTIME)break;//没有稳定直接跳过,没有打分之类的
-        for(i=0;i<n;++i){c[i]=d[i]=a[i];c[n]+=a[i];}//赋初值，上次稳定的值.ps:一般来说老网络稳定值都是一样的
-        c[n]/=n;d[n]=c[n];cou=0;AbsValue=10;j=0;//最新的物质浓度设为其他的平均值
+        for(i=0;i<n;++i){c[i]=d[i]=a[i];}//赋初值，上次稳定的值.ps:一般来说老网络稳定值都是一样的
+        c[n]=0;d[n]=c[n];cou=0;AbsValue=10;j=0;
         //跑新网络
         while(AbsValue>0.000001&&cou<MAXTIME)
         {
@@ -200,8 +194,8 @@ void mainFunc::Network_1(double ReguMatrix[][DIMENS],int n)
         }
         if(j%pets==0){++cou;j=0;}
     }
-    for(i=0;i<n;++i){c[i]=d[i]=f[i]=a[i];c[n]+=a[i];}
-    c[n]/=n;d[n]=f[n]=c[n];
+    for(i=0;i<n;++i){c[i]=d[i]=f[i]=a[i];}
+    c[n]=0;d[n]=f[n]=c[n];
     ofstream igemSfw;
     igemSfw.open("ustcsoftware.txt");
     if(!igemSfw)exit(0);

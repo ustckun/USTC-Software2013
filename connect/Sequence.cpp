@@ -13,6 +13,8 @@
 #include"GRN.h"
 #include"Regulation.h"
 #include"ReadDNA.h"
+#include"PSOPredict.h"
+
 
 void Sequence::initializeGeneSequence( std::string sequence,int number, int size ){
     geneSequence += sequence;

@@ -15,7 +15,7 @@
 //#include <cmath>
 //#include <cstdlib>
 //#include <ctime>
-#define NN 1                                   //count number
+#define NN 100                                   //count number
 #define PETS 128                                
 #define STEP (1.0/PETS)                           //step length
 #define MAXTIME 100                            //maxtime

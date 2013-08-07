@@ -5,11 +5,13 @@
 #include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
+#include"PSOPredict.h"
 
 
 
 
-void Calculate::RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n)
+
+inline void Calculate::RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n)
 //
 {
     int i1,j1,k1,m1;
@@ -33,9 +35,10 @@ void Calculate::RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n)
         else                              
         {
             m1=(int)(a[i1][j1]*100);
-            if(rand()%100<m1)k1=m1>0?rand()%6+5:-rand()%6-5;      
-            else if(rand()%5)k1=0;
-            else k1=-rand()%6-5;
+            if(rand()%100<50+abs(m1)/2)
+                k1=m1>0?(double)(rand()%101)/25.0+2.0:-(double)(rand()%101)/25.0-2.0;
+            else if(rand()%10)k1=0;
+            else k1=m1<0?(double)(rand()%101)/25.0+2.0:-(double)(rand()%101)/25.0-2.0;
             b[i1][j1]=k1;
         }
     }
@@ -97,7 +100,7 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
             if(j%pets==0){++cou;j=0;}
         }
         step=STEP;pets=PETS;
-        if(cou>=MAXTIME)break;
+        if(cou>=MAXTIME)break;c[n]=0;
         for(i=0;i<n;++i){c[i]=d[i]=a[i];c[n]+=a[i];}
         c[n]/=n;d[n]=c[n];cou=0;AbsValue=10;j=0;
         while(AbsValue>0.000001&&cou<MAXTIME)
@@ -156,7 +159,7 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
             if(AbsValue<5&&pets==PETS&&j==PETS){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
         }
         if(j%pets==0){++cou;j=0;}
-    }
+    }c[n]=0;
     for(i=0;i<n;++i){c[i]=d[i]=f[i]=a[i];c[n]+=a[i];}
     c[n]/=n;d[n]=f[n]=c[n];
     ofstream igemSfw;

@@ -12,6 +12,8 @@
 #include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
+#include"PSOPredict.h"
+
 
 void GRN::initializeGRN(double oldGRN[][scale], int mSize){
     for (int i = 0; i != scale; ++i) {

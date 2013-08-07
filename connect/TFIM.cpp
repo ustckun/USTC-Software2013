@@ -24,6 +24,7 @@
 #include"GRN.h"
 #include"Regulation.h"
 #include"ReadDNA.h"
+#include"PSOPredict.h"
 
 //#include"Regulation.h"
 #define aM 5000

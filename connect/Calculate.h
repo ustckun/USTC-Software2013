@@ -11,12 +11,15 @@ public:
         }
     }
     double MaxMa[DIMENS][DIMENS];
-    double nong[DIMENS];
-    void Network_1(double ReguMatrix[][DIMENS],int n);
+    double consistence[DIMENS];
+    //New regulation Matrix and number of genes into this function. It will putout the score and gene's changing into documents
+	void Network_1(double ReguMatrix[][DIMENS],int n);
+	//New Matrix with random regulation and gene number into this function. It will calculate the stable consistence to consistence array. 
     void Network_2(double Matr[][DIMENS],int n);
+	void RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n);
 private:
     double p[DIMENS],q[DIMENS],r[DIMENS],nn[DIMENS];
-	void RandMatrix(double a[][DIMENS],double b[][DIMENS],const int n);
-	double FaNexVal(double Matr[][DIMENS],double a[],const int n,const int i,    double p[],double q[],double nn[],double r[]);
-	double NextValue(double Matr[][DIMENS],double a[],const int n,const int i,double step ,   double p[],double q[],double nn[],double r[]);
+	
+	double FaNexVal(double Matr[][DIMENS],double a[],const int n,const int i,double p[],double q[],double nn[],double r[]);
+	double NextValue(double Matr[][DIMENS],double a[],const int n,const int i,double step,double p[],double q[],double nn[],double r[]);
 };

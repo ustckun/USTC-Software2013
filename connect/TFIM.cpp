@@ -23,7 +23,8 @@
 #include"Sequence.h"
 #include"GRN.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
+#include"PSOPredict.h"
 
 //#include"Regulation.h"
 #define aM 5000

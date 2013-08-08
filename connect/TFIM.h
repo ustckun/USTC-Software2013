@@ -15,7 +15,7 @@
 //#include <cmath>
 //#include <cstdlib>
 //#include <ctime>
-#define NN 1                                   //count number
+#define NN 100                                   //count number
 #define PETS 128                                
 #define STEP (1.0/PETS)                           //step length
 #define MAXTIME 100                            //maxtime
@@ -29,9 +29,14 @@ using namespace std;
 class TFIM
 {
 public:
+	TFIM()
+	{
+		RNA=0;
+		getError=0;
+	}
 	int geneNumber;//get from Regulation
 	char *name;//get from Regulation
-	void getGeneInformation(FILE *fp);
+	void getGeneInformation(FILE *fp);//fp is the position of output file which contains gene number and DNA sequence
 	char *getID();
 	char *getGeneSequence();
 	char *getLeftPosition();

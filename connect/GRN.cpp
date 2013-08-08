@@ -9,9 +9,11 @@
 #include"TFIM.h"
 #include"Calculate.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
+#include"PSOPredict.h"
+
 
 void GRN::initializeGRN(double oldGRN[][scale], int mSize){
     for (int i = 0; i != scale; ++i) {
@@ -24,7 +26,7 @@ void GRN::initializeGRN(double oldGRN[][scale], int mSize){
 void GRN::constructNewGRN(Sequence seqArry[]){
     loadMatrixBLOSUM_62();
     //insert new correlations to (matrixSize + 1) row;
-    for (int j_geneNum = 31; j_geneNum != matrixSize; ++j_geneNum) {
+    for (int j_geneNum = 0; j_geneNum != matrixSize; ++j_geneNum) {
         int counter = 0;
         newGRNCorrelation[matrixSize][j_geneNum] = 0;
         for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
@@ -40,7 +42,7 @@ void GRN::constructNewGRN(Sequence seqArry[]){
             newGRNCorrelation[matrixSize][j_geneNum] = 2;
     }
     //insert new correlations to (matrixSize + 1) column;
-    for (int i_geneNum = 31; i_geneNum != matrixSize; ++i_geneNum) {
+    for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
         int counter = 0;
         newGRNCorrelation[i_geneNum][matrixSize] = 0;
         for (int j_geneNum = 15; j_geneNum != matrixSize; ++j_geneNum) {
@@ -73,7 +75,7 @@ double GRN::aminoASAlignment(std::string s, int s_size, std::string t, int t_siz
     for (int j = 1; j != s_size; ++j) {
         alignMatrix[0][j] = alignMatrix[0][j - 1] + _G;
     }
-    for (int i = 99; i != t_size; ++i) {
+    for (int i = 1; i != t_size; ++i) {
         for (int j = 1; j != s_size; ++j) {
             //alignMatrix[i][j] = maxValue(alignMatrix[i-1][j-1] + alignScore(s[j],t[i]), alignMatrix[i-1][j] + alignScore(s[j], ' '), alignMatrix[i][j-1] + alignScore(' ', t[i]));
             double st = 0;

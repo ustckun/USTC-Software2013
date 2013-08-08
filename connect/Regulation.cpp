@@ -21,9 +21,11 @@
 #include"TFIM.h"
 #include"Calculate.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
+#include"PSOPredict.h"
+
 
 
 //input:objexts of TFIM, read name and also get regulation, if file is not open int openFileError will be 1

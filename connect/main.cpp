@@ -1,17 +1,27 @@
 #include"TFIM.h"
 #include"Calculate.h"
 #include"Regulation.h"
-#include"EasytoDebug.h"
+#include"ReadDNA.h"
 #include"Sequence.h"
 #include"GRN.h"
+#include"PSOPredict.h"
+
 
 int main()
 {
-	TFIM test[N];
+	srand((unsigned)time(0));
+	double matrix[170][170];
+	ReadRegulation(matrix);
+	//double reg[170][170];	
+	Calculate Hope;
+	//Hope.RandMatrix(matrix,reg,166);
+	Hope.Network_1(matrix,166);
+	//for(int i=0;i<170;i++)cout<<Hope.consistence[i]<<endl;
+	/*TFIM test[N];
 	Regulation Hope;
 	Hope.readName(test);
 	Hope.fullFill();
-	//Calculate xinyu;
+	Calculate xinyu;
 	//xinyu.Network_1(Hope.originalMatrix,166);
 	//xinyu.Network_2(Hope.originalMatrix,166);
 	//cout<<xinyu.nong[90];
@@ -26,9 +36,9 @@ int main()
 		cout<<i<<endl;
 		//cout<<test[i].getGeneSequence()<<endl;
 	}
-	fclose(fp);*/
-	//EasytoDebug read[100];
-	EasytoDebug luck[N];
+	fclose(fp);
+	//ReadDNA read[100];
+	ReadDNA luck[N];
 	Sequence good[N];
 	fp=fopen("DNA","r");
 	//fp1=fopen("AAS","w");
@@ -67,6 +77,6 @@ int main()
 	//test[31].getGeneInformation();
 	//int a;
 	//a=test[31].getRNA();
-	//a=test[30].getRNA();
+	//a=test[30].getRNA();*/
 	getchar();
 }

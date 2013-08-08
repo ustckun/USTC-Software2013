@@ -14,8 +14,9 @@
 using namespace std;
 
 int main(){
+/*
     //the index is gengeNumber;
-    /*string dna[3];
+    string dna[3];
     dna[0] = "ATGAAACGCCCGGACTACAGAACATTACAGGCACTGGATGCGGTGATACGTGAACGAGGATTTGAGCGCGCGGCACAAAAGCTGTGCATTACACAATCAGCCGTCTCACAGCGCATTAAGCAACTGGAAAATATGTTCGGGCAGCCGCTGTTGGTGCGTACCGTACCGCCGCGCCCGACGGAACAAGGGCAAAAACTGCTGGCACTGCTGCGCCAGGTGGAGTTGCTGGAAGAAGAGTGGCTGGGCGATGAACAAACCGGTTCGACTCCGCTGCTGCTTTCACTGGCGGTCAACGCCGACAGTCTGGCGACGTGGTTGCTTCCTGCACTGGCTCCTGTGTTGGCTGATTCGCCTATCCGCCTCAACTTGCAGGTAGAAGATGAAACCCGCACTCAGGAACGTCTGCGCCGCGGCGAAGTGGTCGGCGCGGTGAGTATTCAACATCAGGCGCTGCCGAGTTGTCTTGTCGATAAACTTGGTGCGCTCGACTATCTGTTCGTCAGCTCAAAACCCTTTGCCGAAAAATATTTCCCTAACGGCGTAACGCGTTCGGCATTACTGAAAGCGCCAGTGGTCGCGTTTGACCATCTTGACGATATGCACCAGGCCTTTTTGCAGCAAAACTTCGATCTGCCTCCAGGCAGCGTGCCCTGCCATATCGTTAATTCTTCAGAAGCGTTCGTACAACTTGCTCGCCAGGGCACCACCTGCTGTATGATCCCGCACCTGCAAATCGAGAAAGAGCTGGCCAGCGGTGAACTGATTGACTTAACGCCTGGGCTATTTCAACGACGGATGCTCTACTGGCACCGCTTTGCTCCTGAAAGCCGCATGATGCGTAAAGTCACTGATGCGTTACTCGATTATGGTCACAAAGTCCTTCGTCAGGATTAA";
     dna[1] = "ATGACGCAGGATGAATTGAAAAAAGCAGTAGGATGGGCGGCACTTCAGTATGTTCAGCCCGGCACCATTGTTGGTGTAGGTACAGGTTCCACCGCCGCACACTTTATTGACGCGCTCGGTACAATGAAAGGCCAGATTGAAGGGGCCGTTTCCAGTTCAGATGCTTCCACTGAAAAACTGAAAAGCCTCGGCATTCACGTTTTTGATCTCAACGAAGTCGACAGCCTTGGCATCTACGTTGATGGCGCAGATGAAATCAACGGCCACATGCAAATGATCAAAGGCGGCGGCGCGGCGCTGACCCGTGAAAAAATCATTGCTTCGGTTGCAGAAAAATTTATCTGTATTGCAGACGCTTCCAAGCAGGTTGATATTCTGGGTAAATTCCCGCTGCCAGTAGAAGTTATCCCGATGGCACGTAGTGCAGTGGCGCGTCAGCTGGTGAAACTGGGCGGTCGTCCGGAATACCGTCAGGGCGTGGTGACCGATAATGGCAACGTGATCCTCGACGTCCACGGCATGGAAATCCTTGACCCGATAGCGATGGAAAACGCCATAAATGCGATTCCTGGCGTGGTGACTGTTGGCTTGTTTGCTAACCGTGGCGCGGACGTTGCGCTGATTGGCACACCTGACGGTGTCAAAACCATTGTGAAATGA";
     dna[2] = "ATGTCTTATCAGTATGTTAACGTTGTCACTATCAACAAAGTGGCGGTCATTGAGTTTAACTATGGCCGAAAACTTAATGCCTTAAGTAAAGTCTTTATTGATGATCTTATGCAGGCGTTAAGCGATCTCAACCGGCCGGAAATTCGCTGTATCATTTTGCGCGCACCGAGTGGATCCAAAGTCTTCTCCGCAGGTCACGATATTCACGAACTGCCGTCTGGCGGTCGCGATCCGCTCTCCTATGATGATCCATTGCGTCAAATCACCCGCATGATCCAAAAATTCCCGAAACCGATCATTTCGATGGTGGAAGGTAGTGTTTGGGGTGGCGCATTTGAAATGATCATGAGTTCCGATCTGATCATCGCCGCCAGTACCTCAACCTTCTCAATGACGCCTGTAAACCTCGGCGTCCCGTATAACCTGGTCGGCATTCACAACCTGACCCGCGACGCGGGCTTCCACATTGTCAAAGAGCTGATTTTTACCGCTTCGCCAATCACCGCCCAGCGCGCGCTGGCTGTCGGCATCCTCAACCATGTTGTGGAAGTGGAAGAACTGGAAGATTTCACCTTACAAATGGCGCACCACATCTCTGAGAAAGCGCCGTTAGCCATTGCCGTTATCAAAGAAGAGCTGCGTGTACTGGGCGAAGCACACACCATGAACTCCGATGAATTTGAACGTATTCAGGGGATGCGCCGCGCGGTGTATGACAGCGAAGATTACCAGGAAGGGATGAACGCTTTCCTCGAAAAACGTAAACCTAATTTCGTTGGTCATTAA";
@@ -32,7 +33,7 @@ int main(){
     
     //initialize DNA_Array;
     for (int geneNumber = 0; geneNumber != 3; ++geneNumber) {
-        DNA_Array[geneNumber].initializeGeneSequence(dna[geneNumber], geneNumber, dna_size[geneNumber]);
+        DNA_Array[geneNumber].initializeGeneSequence(dna[geneNumber], geneNumber, dna_size[geneNumber], 0);
         DNA_Array[geneNumber].translation();
     }
     
@@ -56,28 +57,32 @@ int main(){
             cout << test_GRN.newGRNCorrelation[i][j] << '\t';
         }
         cout << endl;
-    }*/
-    
-//======================================================================================；
+    }
+*/
+//=====================================================================================；
+
     string dna[166];
     int geneNum[166];
     int dna_size[166];
+    int prod_type[166] = { 0 };
     double grn[170][170];
     GRN test_GRN;
-    Sequence seq_array[166];
+    Sequence seq_array[167];
     ifstream infile;
     infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/Sequence");
     for (int i = 0; i != 166; ++i) {
         infile >> geneNum[i];
         infile >> dna[i];
         dna_size[i] = (int)dna[i].size();
-        seq_array[i].initializeGeneSequence(dna[i], geneNum[i], dna_size[i]);
+        seq_array[i].initializeGeneSequence(dna[i], geneNum[i], dna_size[i], prod_type[i]);
         seq_array[i].translation();
     }
     infile.close();
-    int m_size = 165;
+    //seq_array[166].test(" MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFAYGVQCFSRYPDHMKRHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSVLSKDPNEKRDHMVLLEFVTAAGITHGMDELYK", 238);
+    seq_array[166].test(" VHWQTHTVFNQPIPLNNSNLYLSDGALCEAVTREGAGWDSDFLASIGQQLGTAESLELGRLANVNPPELLRYDAQGRRLDDVRFHPAWHLLMQALCTNRVHNLAWEEDARSGAFVARAARFMLHAQVEAGSLCPITMTFAATPLLLQMLPAPFQDWTTPLLSDRYDSHLLPGGQKRGLLIGMGMTEKQGGSDVMSNTTRAERLEDGSYRLVGHKWFFSVPQSDAHLVLAQTAGGLSCFFVPRFLPDGQRNAIRLERLKDKLGNRSNASCEVEFQDAIGWLLGLEGEGIRLILKMGGMTRFDCALGSHAMMRRAFSLAIYHAHQRHVFGNPLIQQPLMRHVLSRMALQLEGQTALLFRLARAWDRRADAKEALWARLFTPAAKFVICKRGMPFVAEAMEVLGGIGYCEESELPRLYREMPVNSIWEGSGNIMCLDVLRVLNKQAGVYDLLSEAFVEVKGQDRYFDRAVRRLQQQLRKPAEELGREITHQLFLLGCGAQMLKYASPPMAQAWCQVMLDTRGGVRLSEQIQNDLLLRATGGVCV", 541);
+    int m_size = 166;
     //intialize GRN;
-    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation");
+    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation_2.0");
     for (int i = 0; i != 170; ++i) {
         for (int j = 0; j != 170; ++j) {
             grn[i][j] = 2;
@@ -92,32 +97,90 @@ int main(){
     test_GRN.initializeGRN(grn, m_size);
     test_GRN.constructNewGRN(seq_array);
     ofstream outfile;
-    outfile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/test");
+    outfile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/test_method_2");
     for (int i = 0; i != 170; ++i) {
         for (int j = 0; j != 170; ++j) {
             outfile << test_GRN.newGRNCorrelation[i][j] << '\t';
         }
         outfile << endl;
     }
- 
-//=======================================================================================;
-/*    Sequence debug;
-    string s;
-    int geneNum = 0;
-    int size;
+    outfile << endl;
+    outfile.close();
+    outfile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/test.txt");
     
-    ifstream infile;
-    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/Sequence");
-    infile >> geneNum;
-    infile >> s;
-    size = (int)s.size();
-    debug.initializeGeneSequence(s, geneNum, size);
-    debug.translation();
-    cout << "Sequence_DNA size is: " << debug.geneSequence.size() << endl;
-    cout << "Sequence_dna_size is:" << debug.DNASize << endl;
-    cout << endl;
-    cout << "Sequence_AAS size is:" << debug.aminoAcidSequence.size() << endl;
-    cout << "Sequence_AAS_size is:" << debug.aminoASSize <<endl;
+    for (int i = 0; i != 170; ++i) {
+        outfile << i + 1 << '\t' << test_GRN.newGRNCorrelation[166][i] << endl;
+    }
+    outfile << endl;
+    
+    for (int i = 0; i != 170; ++i) {
+        outfile << i + 1 << '\t' << test_GRN.newGRNCorrelation[i][166] << endl;
+    }
+    outfile.close();
+    
+    //use system time as file name;
+    time_t nowtime = time(NULL);
+    struct tm *p;
+    p = gmtime(&nowtime);
+    char filename_1[256] ={ 0 };
+    string filename = "/Users/jinyang/Desktop/Parameter Data Test/row+colume ";
+    sprintf(filename_1, "%d-%d %d%02d", 1 + p -> tm_mon, p -> tm_mday, 8 + p -> tm_hour, p -> tm_min);
+    filename += filename_1;
+    filename += ".txt";
+    outfile.open(filename);
+    for (int i = 0; i != 170; ++i) {
+        outfile << i + 1 << '\t' << test_GRN.newGRNCorrelation[166][i] << '\t' << test_GRN.newGRNCorrelation[i][166]<< endl;
+    }
+    outfile << endl;
+    
+ 
+//=====================================================================================;
+
+// rewrite regulation file, exchange 0 and 2;
+/*    ifstream infile;
+    int s[170][170];
+    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation");
+    for (int i = 0; i != 170; ++i) {
+        for (int j = 0; j != 170; ++j) {
+            infile >> s[i][j];
+        }
+    }
+    infile.close();
+    for (int i = 0; i != 170; ++i) {
+        for (int j = 0; j != 170; ++j) {
+            switch (s[i][j]) {
+                case 2:
+                    s[i][j] = 0;
+                    break;
+                case 0:
+                    s[i][j] = 2;
+                    break;
+            }
+        }
+    }
+    ofstream outfile;
+    outfile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation_2.0");
+    for (int i = 0; i != 170; ++i) {
+        for (int j = 0; j != 170; ++j) {
+            outfile << s[i][j] << '\t';
+        }
+        outfile << endl;
+    }*/
+   
+/*
+    double x = 0;
+    Sequence s;
+    Sequence t;
+    s.aminoAcidSequence = " HEAGAWGHEE";
+    t.aminoAcidSequence = " PAWHEAE";
+    s.aminoASSize = 10;
+    t.aminoASSize = 7;
+    GRN test;
+    test.loadMatrixBLOSUM_XX();
+    x = test.aminoASAlignment(s.aminoAcidSequence, s.aminoASSize, t.aminoAcidSequence, t.aminoASSize);
+    cout << x << endl;
 */
+
 }
+
 

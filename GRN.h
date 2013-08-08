@@ -26,7 +26,7 @@ public:
         }
         for (int i = 0; i != 20; ++i) {
             for (int j = 0; j != 20; ++j) {
-                matrixBLOSUM_62[i][j] = 0;
+                matrixBLOSUM_XX[i][j] = 0;
             }
         }
         matrixSize = 0;
@@ -34,15 +34,22 @@ public:
     void initializeGRN(double oldGRN[][scale], int mSize);
     void constructNewGRN(Sequence seqArray[]);
     double newGRNCorrelation[scale][scale];
+    
+    double aminoASAlignment(std::string s, int s_size, std::string t, int t_size);
+    void loadMatrixBLOSUM_XX();
+    
 private:
     int matrixSize;
-    int matrixBLOSUM_62[20][20];
+    int matrixBLOSUM_XX[20][20];
     //Results of alignments are correlations;
-    double aminoASAlignment(std::string s, int s_size, std::string t, int t_size);
-    int alignScore (char s, char t);
+    
+    int alignScore (char t, char s);
     double maxValue (double a, double b, double c);
+    int alignIndex_BLOSUM50(char s);
+    /*
     int alignIndex_BLOSUM62(char s);
-    void loadMatrixBLOSUM_62();
+    */
+    
 };
 
 #endif /* defined(__GRN__GRN__) */

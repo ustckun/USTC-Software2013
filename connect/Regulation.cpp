@@ -25,7 +25,7 @@
 #include"Sequence.h"
 #include"GRN.h"
 #include"PSOPredict.h"
-
+#include"SBOL.h"
 
 
 //input:objexts of TFIM, read name and also get regulation, if file is not open int openFileError will be 1
@@ -44,6 +44,7 @@ void Regulation::readName(TFIM geneFirst[])
 	char *Name;
 	char STRING1[N][10];
 	double originalMA[N][N];
+	int unknow=0;
 	data.get(ch);
 	for(i=0;i<N;)
 	{
@@ -114,9 +115,12 @@ void Regulation::readName(TFIM geneFirst[])
 		data.get(ch);
 		if(ch=='-')
 		{
-			if(originalMA[b][a]==1||originalMA[b][a]==0)
+			if(originalMA[b][a]==1||originalMA[b][a]==2)
 			{
-				originalMA[b][a]=0;
+				originalMA[b][a]=2;
+				uncertain1.push_back(b);
+				uncertain2.push_back(a);
+				unknow++;
 			}
 			else
 				originalMA[b][a]=-1;
@@ -125,12 +129,17 @@ void Regulation::readName(TFIM geneFirst[])
 		{
 			data.get(ch);
 			if(ch=='-')
-				originalMA[b][a]=0;
+			{
+				originalMA[b][a]=2;
+				uncertain1.push_back(b);
+				uncertain2.push_back(a);
+				unknow++;
+			}
 			else
 				originalMA[b][a]=1;
 		}
 		else
-			originalMA[b][a]=2;
+			originalMA[b][a]=0;
 		string noUse;
 		getline(data,noUse);
 		num=0;
@@ -158,7 +167,7 @@ void Regulation::fullFill()
 			a=originalMatrix[m][n];
 			if(a!=1.0&&a!=0.0&&a!=-1.0&&a!=2.0)
 			{
-				originalMatrix[m][n]=2;
+				originalMatrix[m][n]=0;
 			}
 		}
 	}
@@ -174,4 +183,51 @@ int Regulation::getGeneAmount()
 int Regulation::getOpenError()
 {
 	return openFileError;
+}
+
+map<string,string> Regulation::mapTFIM()
+{
+	map<string,string> dictTFIM;
+	ifstream data("TFIM");
+	//ofstream text("Sequence");
+	char ch;
+	int i;
+	for(i=1;data.get(ch);i++)
+	{
+		while(ch=='#')//filter RegulonDB line
+		{
+			string noUse;
+			getline(data,noUse);
+			data.get(ch);
+		}
+		string line;
+		char sline[30];
+		//char cline[30];
+		getline(data,line);
+		int j;
+		for(j=0;line[j]!='(';j++)
+		{
+			sline[j]=line[j];
+		}
+		sline[j]='\0';
+		strlwr(sline);
+		int p;
+		for(p=0;sline[p]!='	';p++)
+		{
+			//cline[p]=line[p];
+		}
+		char tempName[20];
+		string name;
+		for(int q=0;p<j;q++)
+		{
+			p++;
+			tempName[q]=sline[p];
+		}
+		name=tempName;
+		dictTFIM[name]=line;
+		//cout<<i<<endl;
+		//tempName[0]='\0';
+	}
+	return dictTFIM;
+	//tempName="";
 }

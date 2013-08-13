@@ -6,7 +6,7 @@
 #include"Sequence.h"
 #include"GRN.h"
 #include"PSOPredict.h"
-
+#include"SBOL.h"
 
 
 
@@ -26,7 +26,7 @@ inline void Calculate::RandMatrix(double a[][DIMENS],double b[][DIMENS],const in
             {
                 case 1:b[i1][j1]=(double)(rand()%101)/25.0+2.0;break;//positive regulate
                 case -1:b[i1][j1]=-(double)(rand()%101)/25.0-2.0;break;//negtive regulate
-                case 2:b[i1][j1]=0;break;               //no regulation
+                case 0:b[i1][j1]=0;break;               //no regulation
                 default :m1=rand()%2;                
                 if(m1)b[i1][j1]=(double)(rand()%101)/25.0+2.0;
                 else b[i1][j1]=-(double)(rand()%101)/25.0-2.0;
@@ -85,7 +85,7 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
             ++j;
             for(i=0;i<n;++i)
             {
-                a[i]+=NextValue(TempMatrix,b,n,i,step,p,q,nn,r)*step;
+                a[i]+=FaNexVal(TempMatrix,b,n,i,p,q,nn,r)*step;
                 if(a[i]<0.000001){cou=MAXTIME+2;break;}
             }
             if(cou>=MAXTIME)break;                
@@ -101,14 +101,14 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
         }
         step=STEP;pets=PETS;
         if(cou>=MAXTIME)break;c[n]=0;
-        for(i=0;i<n;++i){c[i]=d[i]=a[i];c[n]+=a[i];}
-        c[n]/=n;d[n]=c[n];cou=0;AbsValue=10;j=0;
+        for(i=0;i<n;++i){c[i]=d[i]=a[i];}
+        c[n]=0;d[n]=c[n];cou=0;AbsValue=10;j=0;
         while(AbsValue>0.000001&&cou<MAXTIME)
         {
             ++j;
             for(i=0;i<n+1;++i)
             {
-                c[i]+=NextValue(TempMatrix,d,n+1,i,step,p,q,nn,r)*step;
+                c[i]+=FaNexVal(TempMatrix,d,n+1,i,p,q,nn,r)*step;
                 if(c[i]<0.000001){cou=MAXTIME+2;break;}
             }
             for(i=0;i<n+1;++i)d[i]=c[i];
@@ -149,7 +149,7 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
     while(AbsValue>0.000001&&cou<MAXTIME)                     
     {
         ++j;
-        for(i=0;i<n;++i){a[i]+=NextValue(MaxMa,b,n,i,step,p,q,nn,r)*step;}
+        for(i=0;i<n;++i){a[i]+=FaNexVal(MaxMa,b,n,i,p,q,nn,r)*step;}
         for(i=0;i<n;++i)b[i]=a[i];
         if(j%(pets/8)==0)
         {
@@ -160,8 +160,8 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
         }
         if(j%pets==0){++cou;j=0;}
     }c[n]=0;
-    for(i=0;i<n;++i){c[i]=d[i]=f[i]=a[i];c[n]+=a[i];}
-    c[n]/=n;d[n]=f[n]=c[n];
+    for(i=0;i<n;++i){c[i]=d[i]=f[i]=a[i];}
+    c[n]=0;d[n]=f[n]=c[n];
     ofstream igemSfw;
     igemSfw.open("ustcsoftware.txt");
     if(!igemSfw)exit(0);
@@ -169,7 +169,7 @@ void Calculate::Network_1(double ReguMatrix[][DIMENS],int n)
     while(AbsValue>0.00000001&&cou<MAXTIME)             
     {
         ++j;
-        for(i=0;i<n+1;++i){c[i]+=NextValue(MaxMa,d,n+1,i,step,p,q,nn,r)*step;}
+        for(i=0;i<n+1;++i){c[i]+=FaNexVal(MaxMa,d,n+1,i,p,q,nn,r)*step;}
         for(i=0;i<n+1;++i)d[i]=c[i];
         if(j%(pets/8)==0)
         {
@@ -199,7 +199,7 @@ void Calculate::Network_2(double Matr[][DIMENS],int n)
     while(AbsValue>0.0000001&&cou<MAXTIME)  
     {
         ++j;
-        for(i=0;i<n;++i){consistence[i]+=NextValue(Matr,b,n,i,step,p,q,nn,r)*step;if(consistence[i]<0.0000001){cou=MAXTIME+2;break;}}
+        for(i=0;i<n;++i){consistence[i]+=FaNexVal(Matr,b,n,i,p,q,nn,r)*step;if(consistence[i]<0.0000001){cou=MAXTIME+2;break;}}
         if(cou>=MAXTIME)break;                
         for(i=0;i<n;++i)b[i]=consistence[i];
         if(j%(pets/8)==0)

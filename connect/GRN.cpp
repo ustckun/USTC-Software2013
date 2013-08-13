@@ -13,7 +13,7 @@
 #include"Sequence.h"
 #include"GRN.h"
 #include"PSOPredict.h"
-
+#include"SBOL.h"
 
 void GRN::initializeGRN(double oldGRN[][scale], int mSize){
     for (int i = 0; i != scale; ++i) {

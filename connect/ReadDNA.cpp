@@ -10,7 +10,7 @@
 #include"Regulation.h"
 #include"ReadDNA.h"
 #include"PSOPredict.h"
-
+#include"SBOL.h"
 
 
 void ReadDNA::fetch(FILE *temp)

@@ -14,7 +14,7 @@
 #include"Regulation.h"
 #include"ReadDNA.h"
 #include"PSOPredict.h"
-
+#include"SBOL.h"
 
 void Sequence::initializeGeneSequence( std::string sequence,int number, int size ){
     geneSequence += sequence;

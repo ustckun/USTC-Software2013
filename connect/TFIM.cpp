@@ -25,6 +25,7 @@
 #include"Regulation.h"
 #include"ReadDNA.h"
 #include"PSOPredict.h"
+#include"SBOL.h"
 
 //#include"Regulation.h"
 #define aM 5000
@@ -47,6 +48,7 @@ int easyFind(char *a,char *b)
 			}
 			if(q==c)
 				if(a[p-1]=='\t')
+					if(a[p+c]=='(')
 					return 1;
 		}
 		p++;
@@ -55,78 +57,48 @@ int easyFind(char *a,char *b)
 }
 
 //get 166 genes information in database
-void TFIM::getGeneInformation(FILE *fp)
+void TFIM::getGeneInformation(FILE *fp,map<string,string> dict)
 {
 	ifstream data("TFIM");
 	//ofstream text("Sequence");
-	if(!data)
+	string allLine;
+	if(dict.find(geneName)!=dict.end())
 	{
-		getError=1;
+		allLine=dict[geneName];
+	char fullLine[10000];
+	int h=0;
+	while(allLine[h]!='\0')
+	{
+		fullLine[h]=allLine[h];
+		h++;
 	}
+	fullLine[h]='\0';
+	const char *delims="	";
+	char *p;
+	p=strtok(fullLine,delims);
+	iD=p;
+	p=strtok(NULL,delims);
+	p=strtok(NULL,delims);
+	leftPosition=p;
+	p=strtok(NULL,delims);
+	rightPosition=p;
+	p=strtok(NULL,delims);
+	p=strtok(NULL,delims);
+	p=strtok(NULL,delims);
+	geneDescription=p;
+	p=strtok(NULL,delims);
+	p=strtok(NULL,delims);
+	p=strtok(NULL,delims);
+	geneSequence=p;
+	//i=aM+1;
+	//text.seekp(text.end);
+	//text<<geneNumber<<"	"<<geneSequence<<endl;
+	fprintf(fp,"%s	%s\n",geneName,geneSequence);}
+	//cout<<i<<endl;
+	//if(i==aM)
+	//	cout<<"can't find gene sequence"<<endl;
 	else
-		getError=0;
-	char ch;
-	int i;
-	for(i=1;i<aM;i++)
-	{
-		if(!data.get(ch))
-		{
-			i=aM;
-		}
-		while(ch=='#')//filter RegulonDB line
-		{
-			string noUse;
-			getline(data,noUse);
-			data.get(ch);
-		}
-		string line;
-		char GN[10];
-		getline(data,line);
-		for(int h=0;h<10;h++)
-			GN[h]=geneName[h];
-		char cLine[60];
-		for(int H=0;H<60;H++)
-			cLine[H]=line[H];
-		strlwr(cLine);
-		strlwr(GN);
-		int haveFound=easyFind(cLine,GN);
-		if(haveFound==1)
-		{
-			char fullLine[10000];
-			int h=0;
-			while(line[h]!='\0')
-			{
-				fullLine[h]=line[h];
-				h++;
-			}
-			fullLine[h]='\0';
-			const char *delims="	";
-			char *p;
-			p=strtok(fullLine,delims);
-			iD=p;
-			p=strtok(NULL,delims);
-			p=strtok(NULL,delims);
-			leftPosition=p;
-			p=strtok(NULL,delims);
-			rightPosition=p;
-			p=strtok(NULL,delims);
-			p=strtok(NULL,delims);
-			if(*p!='-')RNA=1;
-			else RNA=0;
-			p=strtok(NULL,delims);
-			p=strtok(NULL,delims);
-			p=strtok(NULL,delims);
-			p=strtok(NULL,delims);
-			geneSequence=p;
-			i=aM+1;
-			//text.seekp(text.end);
-			//text<<geneNumber<<"	"<<geneSequence<<endl;
-			fprintf(fp,"%d	%s\n",geneNumber,geneSequence);
-		}
-		//cout<<i<<endl;
-	}
-	if(i==aM)
-		cout<<"can't find gene sequence"<<endl;
+		cout<<geneName<<endl;
 }
 
 //char *name has memory leaks so put name to private geneName
@@ -139,25 +111,25 @@ void TFIM::putName()
 }
 
 //get Gene ID of regulonDB
-char *TFIM::getID()
+string TFIM::getID()
 {
 	return iD;
 }
 
 //get gene left end position in genome
-char *TFIM::getLeftPosition()
+string TFIM::getLeftPosition()
 {
 	return leftPosition;
 }
 
 //get gene right end position in genome
-char *TFIM::getRightPosition()
+string TFIM::getRightPosition()
 {
 	return rightPosition;
 }
 
 //get Gene sequence in database
-char *TFIM::getGeneSequence()
+string TFIM::getGeneSequence()
 {
 	return geneSequence;
 }
@@ -174,8 +146,13 @@ char *TFIM::getGeneName()
 	return geneName;
 }
 
-int TFIM::getRNA()
+/*int TFIM::getRNA()
 {
 	cout<<RNA<<endl;
 	return RNA;
+}*/
+
+string TFIM::getGeneDescription()
+{
+	return geneDescription;
 }

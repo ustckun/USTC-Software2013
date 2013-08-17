@@ -1,10 +1,10 @@
-void ReadRegulation(double matrix[170][170])
+void ReadRegulation(double matrix[N][N])
 {
 	ifstream inf;
 	inf.open("newGRN");
-	for(int i=0;i<170;i++)
+	for(int i=0;i<N;i++)
 	{
-		for(int j=0;j<170;j++)
+		for(int j=0;j<N;j++)
 		{
 			//fscanf(fp,"%f	",&matrix[i][j]);
 			inf>>matrix[i][j];

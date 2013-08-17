@@ -31,37 +31,15 @@
 #define aM 5000
 
 //a function to find string b in string a
-int easyFind(char *a,char *b)
-{
-	int p=0,q=0;
-	int c=strlen(b);
-	while(p<60)
-	{
-		if(a[p]==b[0])
-		{
-			for(q=1;q<c;)
-			{
-				if(a[p+q]==b[q])
-					q++;
-				else
-					q=100;
-			}
-			if(q==c)
-				if(a[p-1]=='\t')
-					if(a[p+c]=='(')
-					return 1;
-		}
-		p++;
-	}
-	return -1;
-}
 
 //get 166 genes information in database
-void TFIM::getGeneInformation(FILE *fp,map<string,string> dict)
+void TFIM::getGeneInformation(map<string,string> dict)
 {
-	ifstream data("TFIM");
+	//ifstream data("TFIM");
 	//ofstream text("Sequence");
 	string allLine;
+	string tempLeft;
+	string tempRight;
 	if(dict.find(geneName)!=dict.end())
 	{
 		allLine=dict[geneName];
@@ -79,9 +57,11 @@ void TFIM::getGeneInformation(FILE *fp,map<string,string> dict)
 	iD=p;
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
-	leftPosition=p;
+	tempLeft=p;
+	leftPosition=atoi(tempLeft.c_str());
 	p=strtok(NULL,delims);
-	rightPosition=p;
+	tempRight=p;
+	rightPosition=atoi(tempRight.c_str());
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
@@ -93,10 +73,11 @@ void TFIM::getGeneInformation(FILE *fp,map<string,string> dict)
 	//i=aM+1;
 	//text.seekp(text.end);
 	//text<<geneNumber<<"	"<<geneSequence<<endl;
-	fprintf(fp,"%s	%s\n",geneName,geneSequence);}
+	//fprintf(fp,"%s	%s\n",geneName,geneSequence);
 	//cout<<i<<endl;
 	//if(i==aM)
 	//	cout<<"can't find gene sequence"<<endl;
+	}
 	else
 		cout<<geneName<<endl;
 }
@@ -117,13 +98,13 @@ string TFIM::getID()
 }
 
 //get gene left end position in genome
-string TFIM::getLeftPosition()
+int TFIM::getLeftPosition()
 {
 	return leftPosition;
 }
 
 //get gene right end position in genome
-string TFIM::getRightPosition()
+int TFIM::getRightPosition()
 {
 	return rightPosition;
 }
@@ -155,4 +136,21 @@ char *TFIM::getGeneName()
 string TFIM::getGeneDescription()
 {
 	return geneDescription;
+}
+
+void TFIM::putInPromoterName(string promoter)
+{
+	promoterName=promoter;
+}
+
+void TFIM::getPromoterIF(FILE *fp,map<string,string>dict)
+{
+	if(dict.find(promoterName)!=dict.end())
+	{
+		promoterSequence=dict[promoterName];
+		//DATA<<geneNumber<<"	"<<promoterSequence<<"	"<<geneSequence<<endl;
+		fprintf(fp,"%d	%s	%s\n",geneNumber,promoterSequence.c_str(),geneSequence.c_str());
+	}
+	else
+		cout<<promoterName<<endl;
 }

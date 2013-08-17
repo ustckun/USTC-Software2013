@@ -18,11 +18,42 @@ int main()
 	//Hope.RandMatrix(matrix,reg,166);
 	//Hope.Network_1(matrix,166);
 	//for(int i=0;i<170;i++)cout<<Hope.consistence[i]<<endl;
-	TFIM test[200];
+	TFIM test[GENEAM];
 	Regulation luck;
 	//SBOL happy;
-	luck.readName(test);
-	luck.fullFill();
+	luck.readTUPosition();
+	/*for(int i=0;i<luck.TUPositon.size();i++)
+	{
+		cout<<luck.promoterNameLib[i]<<"	"<<luck.TUPositon[i]<<endl;
+	}*/
+	luck.getRegulationMatrix(test);
+	//luck.fullFill();
+	//ofstream dna("Old_GRN");
+	//ofstream DATA("NO&PRO&GENE");
+	FILE *fp;
+	fp=fopen("NO&PRE&DNA","w");
+	map<string,string> dict;
+	dict=luck.mapTFIM();
+	/*for(int i=0;i<GENEAM;i++)
+	{
+		for(int j=0;j<TFScale;j++)
+		{
+			dna<<luck.originalGRN[i][j]<<"	";
+		}
+		dna<<endl;
+	}*/
+	for(int i=0;i<luck.getGeneAmount();i++)
+	{
+		test[i].getGeneInformation(dict);
+		cout<<i<<endl;
+	}
+	//dict.erase(dict.begin(),dict.end());
+	luck.readTUPosition();
+	luck.getGenePromoter(test);
+	dict=luck.mapPromoter();
+	for(int i=0;i<luck.getGeneAmount();i++)
+		test[i].getPromoterIF(fp,dict);
+	getchar();
 	/*for(int i=0;i<luck.uncertain1.size();i++)
 	{
 		cout<<luck.uncertain1[i]<<"	";
@@ -43,8 +74,8 @@ int main()
 	}
 	cout << (double)clock()/CLOCKS_PER_SEC << endl;
 	getchar();*/
-	PSOPredict happy;
-	Calculate cal;
+	//PSOPredict happy;
+	//Calculate cal;
 	/*for(int i=0;i<N;i++)
 	{
 		happy.randomMax[i]=0;
@@ -57,19 +88,19 @@ int main()
 	{
 		file<<happy.randomMin[i]<<"	"<<happy.randomMax[i]<<endl;
 	}*/
-	happy.targetGene[156]=5.6;
+	/*happy.targetGene[156]=5.6;
 	happy.algorithm_PSO(luck.originalMatrix,happy.targetGene,luck.getGeneAmount(),cal);
 	for(int i=0;i<luck.getGeneAmount();i++)
 	{
 		cout<<happy.edPick[i]<<endl;
 		cout<<happy.toPick[i]<<endl;
-	}
+	}*/
 	/*ofstream file("Old_GRN");
 	for(int i=0;i<N;i++)
 	{
 		for(int j=0;j<N;j++)
 		{
-			file<<Hope.originalMatrix[i][j]<<"	";
+			file<<luck.originalMatrix[i][j]<<"	";
 		}
 		file<<endl;
 	}*/

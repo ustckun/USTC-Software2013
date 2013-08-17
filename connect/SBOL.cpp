@@ -61,8 +61,8 @@ void SBOL::CreatSBOL(string position,TFIM IM)
 	SBOLfile<<"		"<<"</dnaSequence>"<<endl;
 	SBOLfile<<"		"<<"<annotation>"<<endl;
 	SBOLfile<<"			<SequenceAnnotation rdf:about=\"http://example.com/sa1\">"<<endl;
-	SBOLfile<<"				"<<Combine("biostart",IM.getLeftPosition())<<endl;
-	SBOLfile<<"				"<<Combine("biostart",IM.getRightPosition())<<endl;
+	SBOLfile<<"				"<<FormartStart("biostart")<<IM.getLeftPosition()<<FormartEnd("biostart")<<endl;
+	SBOLfile<<"				"<<FormartStart("biostart")<<IM.getRightPosition()<<FormartEnd("biostart")<<endl;
 	SBOLfile<<"			</SequenceAnnotation>"<<endl;
 	SBOLfile<<"		"<<"</annotation>"<<endl;
 	SBOLfile<<"	</DnaComponent>"<<endl;

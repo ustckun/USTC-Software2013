@@ -145,7 +145,7 @@ double PSOPredict::fitness_Function (vector<double> x, double GRN[scale][scale],
 int PSOPredict::min_Line(double fitness[])
 {
     double comp = fitness[0];
-    int minLine;
+    int minLine=0;
     for(int i = 0; i < M; ++i)
         if(comp > fitness[i])
         {
@@ -178,19 +178,6 @@ void PSOPredict::algorithm_PSO(double GRN_Origin[scale][scale],double target_gen
 
     srand(time(NULL));
     double GRN[scale][scale];
-    //read GRN from regulation1.0
-
-    /*ifstream infile;
-    infile.open("regulation1.txt");
-    for(int i = 0; i < scale; ++i)
-        for(int j = 0; j < scale; ++j)
-            {
-                infile >> GRN_Origin[i][j];
-                //cout<<GRN_Origin[i][j];
-            }*/
-
-    //transformation of GRN for function_Liao
-
     for(int i = 0; i < scale; ++i)
         for(int j = 0; j < scale; ++j)
         {
@@ -200,13 +187,10 @@ void PSOPredict::algorithm_PSO(double GRN_Origin[scale][scale],double target_gen
                 GRN[i][j] = 1.0;
             else if(GRN_Origin[i][j] == -1.0)
                 GRN[i][j] = -1.0;
-            //else if(GRN_Origin[i][j] == 0)
-              //  GRN[i][j] = (rand()%2)*8.0 - 4.0;
         }
 
     vector< vector<double> > x_Matrix(M,vector<double>(P,0));
     vector< vector<double> > v_Matrix(M,vector<double>(P,0));
-
     //initialize postion and velocity matrix of paticles;
 
     for(int i = 0; i < M; ++i)
@@ -232,11 +216,11 @@ void PSOPredict::algorithm_PSO(double GRN_Origin[scale][scale],double target_gen
     //initialize 2 array: fitness_x and fitness_pbest;
 
     int best_Line = 0;
-    /*for(int i = 0; i < M ; ++i)
+    for(int i = 0; i < M ; ++i)
     {
 		fitness_pbest[i] = fitness_Function(x_Matrix[i],GRN_Origin,target_gene,n,NEW);
         fitness_x[i] = fitness_pbest[i];
-    }*/
+	}
     best_Line = min_Line(fitness_pbest);
     fitness_gbest = fitness_pbest[best_Line];
     best = pbest[best_Line];

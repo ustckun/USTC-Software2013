@@ -29,7 +29,7 @@ public:
     int aminoASSize;
     //translate RNA sequence into amino acid sequence;
     void translation();
-	void getNewASS(string insertGene);
+	void getNewASS(string insertGene,int n);
 private:
     //std::string RNASequence;
     //transcript gene sequence(DNA) into RNA sequence;

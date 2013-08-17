@@ -128,9 +128,9 @@ int Sequence::translate(char s){
     }
 }
 
-void Sequence::getNewASS(string insertGene)
+void Sequence::getNewASS(string insertGene,int n)
 {
-	geneNumber=165+1;
+	geneNumber=n;
 	DNASize=insertGene.length()*3+3;
 	aminoASSize=insertGene.length();
 	aminoAcidSequence=insertGene;

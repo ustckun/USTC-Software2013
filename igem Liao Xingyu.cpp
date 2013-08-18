@@ -37,12 +37,14 @@ public:
     void Network_2(double **Matr,int nx,int ny);
 private:
     double *p,*q,*r,*nn;
+    void RandMatrix(double **a,double **b,const int nx,const int ny)
+    double FaNexVal(double **Matr,double a[],const int nx,const int i,double p[],double q[],double nn[],double r[])
 };
 
 
 
 
-inline void RandMatrix(double **a,double **b,const int nx,const int ny)
+void mainFunc::RandMatrix(double **a,double **b,const int nx,const int ny)
 {
     int i1,j1,k1,m1;
     //srand((unsigned)time(0));
@@ -74,7 +76,7 @@ inline void RandMatrix(double **a,double **b,const int nx,const int ny)
     }
 }
 
-double FaNexVal(double **Matr,double a[],const int nx,const int i,    double p[],double q[],double nn[],double r[])
+double mainFunc::FaNexVal(double **Matr,double a[],const int nx,const int i,    double p[],double q[],double nn[],double r[])
 {
     int j;
     double m[3];m[0]=0;
@@ -104,63 +106,129 @@ void mainFunc::Network_1(double **ReguMatrix,int nx,int ny)
     double FenShu[101];
     int i(0),j=0,cou(0),k(0);
     double **TempMatrix;
-    a=new double[DIMENSY];b=new double[DIMENSY];c=new double[DIMENSY];d=new double[DIMENSY];
-    e=new double[DIMENSY];f=new double[DIMENSY];TempMatrix=new double*[DIMENSY];
-    for(i=0;i<DIMENSY;++i)TempMatrix[i]=new double[DIMENSX];
-    double step=STEP;int pets=PETS;
-    for(i=0;i<101;++i)FenShu[i]=0;
-    for(i=0;i<ny;++i)a[i]=b[i]=e[i]=INITIALVALUE;  
+    a=new double[DIMENSY];
+    b=new double[DIMENSY];
+    c=new double[DIMENSY];
+    d=new double[DIMENSY];
+    e=new double[DIMENSY];
+    f=new double[DIMENSY];
+    TempMatrix=new double*[DIMENSY];
+    for(i=0;i<DIMENSY;++i)
+        TempMatrix[i]=new double[DIMENSX];
+    double step=STEP;
+    int pets=PETS;
+    for(i=0;i<101;++i)
+        FenShu[i]=0;
+    for(i=0;i<ny;++i)
+        a[i]=b[i]=e[i]=INITIALVALUE;  
     while(k<NN)                               
     {
         ++k;
         RandMatrix(ReguMatrix,TempMatrix,nx,ny); 
-        AbsValue=10;j=0;step=STEP;pets=PETS;
+        AbsValue=10;
+        j=0;
+        step=STEP;
+        pets=PETS;
         while(AbsValue>0.000001&&cou<MAXTIME)
         {
             ++j;
             for(i=0;i<ny;++i)
             {
                 a[i]+=FaNexVal(TempMatrix,b,nx,i,p,q,nn,r)*step;
-                if(a[i]<0.000001){cou=MAXTIME+2;break;}
+                if(a[i]<0.000001)
+                    {
+                        cou=MAXTIME+2;
+                        break;
+                    }
             }
-            if(cou>=MAXTIME)break;   
-            for(i=0;i<ny;++i)b[i]=a[i];
+            if(cou>=MAXTIME)
+                break;   
+            for(i=0;i<ny;++i)
+                b[i]=a[i];
             if(j%(pets/8)==0)
             {
                 AbsValue=0;
-                for(i=0;i<ny;++i){AbsValue+=fabs(a[i]-e[i]);}
-                for(i=0;i<ny;++i)e[i]=a[i];
-                if(AbsValue<5&&pets==PETS&&j==PETS){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
+                for(i=0;i<ny;++i)
+                    {
+                        AbsValue+=fabs(a[i]-e[i]);
+                    }
+                for(i=0;i<ny;++i)
+                    e[i]=a[i];
+                if(AbsValue<5&&pets==PETS&&j==PETS)
+                    {
+                        step=STEP*4.0;
+                        pets=PETS/4;
+                        ++cou;
+                        j=0;
+                        continue;
+                    }
             }
-            if(j%pets==0){++cou;j=0;}
+            if(j%pets==0)
+                {
+                    ++cou;
+                    j=0;
+                }
         }
-        step=STEP;pets=PETS;
+        step=STEP;
+        pets=PETS;
         if(cou>=MAXTIME)break;
-        for(i=0;i<ny;++i){c[i]=d[i]=a[i];}
-        c[ny]=0;d[ny]=c[ny];cou=0;AbsValue=10;j=0;
-        //ÅÜÐÂÍøÂç
+        for(i=0;i<ny;++i)
+            {
+                c[i]=d[i]=a[i];
+            }
+        c[ny]=0;
+        d[ny]=c[ny];
+        cou=0;
+        AbsValue=10;
+        j=0;
         while(AbsValue>0.000001&&cou<MAXTIME)
         {
             ++j;
             for(i=0;i<ny+1;++i)
             {
                 c[i]+=FaNexVal(TempMatrix,d,nx+1,i,p,q,nn,r)*step;
-                if(c[i]<0.000001){cou=MAXTIME+2;break;}
+                if(c[i]<0.000001)
+                    {
+                        cou=MAXTIME+2;
+                        break;
+                    }
             }
-            for(i=0;i<ny+1;++i)d[i]=c[i];
+            for(i=0;i<ny+1;++i)
+                d[i]=c[i];
             if(j%(pets/8)==0)
             {
                 AbsValue=0;
-                for(i=0;i<ny+1;++i){AbsValue+=fabs(c[i]-f[i]);}//¼ì²éÆ½ºâ
-                for(i=0;i<ny+1;++i)f[i]=c[i];
-                if(AbsValue<5&&pets==PETS&&j==PETS){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
+                for(i=0;i<ny+1;++i)
+                {
+                    AbsValue+=fabs(c[i]-f[i]);
+                }
+                for(i=0;i<ny+1;++i)
+                    f[i]=c[i];
+                if(AbsValue<5&&pets==PETS&&j==PETS)
+                    {
+                        step=STEP*4.0;
+                        pets=PETS/4;
+                        ++cou;
+                        j=0;
+                        continue;
+                    }
             }
-            if(j%pets==0){j=0;++cou;}
+            if(j%pets==0)
+                {
+                    j=0;
+                    ++cou;
+                }
         }
-        if(cou>=MAXTIME){sum+=1;FenShu[0]+=1;break;} 
+        if(cou>=MAXTIME)
+            {
+                sum+=1;
+                FenShu[0]+=1;
+                break;
+            } 
         AbsValue=0;
         sum+=1;
-        for(i=0;i<ny;++i)AbsValue+=(fabs(c[i]-a[i]))/(c[i]>a[i]?a[i]:c[i]);
+        for(i=0;i<ny;++i)
+            AbsValue+=(fabs(c[i]-a[i]))/(c[i]>a[i]?a[i]:c[i]);
         Score=1-AbsValue*AbsValue/(ny*ny/9.0+AbsValue*AbsValue);
         Score*=100;
         Score*=(1-(pow(((double)cou)/MAXTIME,3)));
@@ -168,63 +236,109 @@ void mainFunc::Network_1(double **ReguMatrix,int nx,int ny)
         {
             for(i=0;i<ny+1;++i)
             for(j=0;j<nx+1;++j)
-            MaxMa[i][j]=TempMatrix[i][j];
+                MaxMa[i][j]=TempMatrix[i][j];
             MaxScore=Score;
         }
         FenShu[(int)Score]+=1;   
     }
-    for(i=0;i<101;++i)FenShu[i]/=sum;  
+    for(i=0;i<101;++i)
+        FenShu[i]/=sum;  
     ofstream fi1;
-    fi1.open("fenshu.txt");
+    fi1.open("Score");
     for(i=0;i<101;++i)
         fi1<<i+0.5<<' '<<FenShu[i]<<endl;
     fi1.close();
-    
-    for(i=0;i<ny;++i)a[i]=b[i]=e[i]=INITIALVALUE;
+    for(i=0;i<ny;++i)
+        a[i]=b[i]=e[i]=INITIALVALUE;
     AbsValue=10;
-    j=0;cou=0;step=STEP;pets=PETS;
+    j=0;
+    cou=0;
+    step=STEP;
+    pets=PETS;
     while(AbsValue>0.000001&&cou<MAXTIME)    
     {
         ++j;
-        for(i=0;i<ny;++i){a[i]+=FaNexVal(MaxMa,b,nx,i,p,q,nn,r)*step;}
-        for(i=0;i<ny;++i)b[i]=a[i];
+        for(i=0;i<ny;++i)
+            a[i]+=FaNexVal(MaxMa,b,nx,i,p,q,nn,r)*step;
+        for(i=0;i<ny;++i)
+            b[i]=a[i];
         if(j%(pets/8)==0)
         {
             AbsValue=0;
-            for(i=0;i<ny;++i){AbsValue+=fabs(a[i]-e[i]);}
-            for(i=0;i<ny;++i)e[i]=a[i];
-            if(AbsValue<5&&pets==PETS&&j==PETS){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
+            for(i=0;i<ny;++i)
+                AbsValue+=fabs(a[i]-e[i]);
+            for(i=0;i<ny;++i)
+                e[i]=a[i];
+            if(AbsValue<5&&pets==PETS&&j==PETS)
+                {
+                    step=STEP*4.0;
+                    pets=PETS/4;
+                    ++cou;
+                    j=0;
+                    continue;
+                }
         }
-        if(j%pets==0){++cou;j=0;}
+        if(j%pets==0)
+            {
+                ++cou;
+                j=0;
+            }
     }
-    for(i=0;i<ny;++i){c[i]=d[i]=f[i]=a[i];}
-    c[ny]=0;d[ny]=f[ny]=c[ny];
+    for(i=0;i<ny;++i)
+        {
+            c[i]=d[i]=f[i]=a[i];
+        }
+    c[ny]=0;
+    d[ny]=f[ny]=c[ny];
     ofstream igemSfw;
-    igemSfw.open("ustcsoftware.txt");
-    if(!igemSfw)exit(0);
-    j=0;cou=0;AbsValue=10;step=STEP;pets=PETS;
+    igemSfw.open("EachGeneChange");
+    if(!igemSfw)
+        exit(0);
+    j=0;
+    cou=0;
+    AbsValue=10;
+    step=STEP;
+    pets=PETS;
     while(AbsValue>0.00000001&&cou<MAXTIME)  
     {
         ++j;
-        for(i=0;i<ny+1;++i){c[i]+=FaNexVal(MaxMa,d,nx+1,i,p,q,nn,r)*step;}
-        for(i=0;i<ny+1;++i)d[i]=c[i];
+        for(i=0;i<ny+1;++i)
+                c[i]+=FaNexVal(MaxMa,d,nx+1,i,p,q,nn,r)*step;
+        for(i=0;i<ny+1;++i)
+            d[i]=c[i];
         if(j%(pets/8)==0)
         {
             igemSfw<<cou+j*step<<' '<<flush;
             for(i=0;i<ny;++i)igemSfw<<c[i]<<' '<<flush;
             igemSfw<<c[ny]<<endl;
             AbsValue=0;
-            for(i=0;i<ny+1;++i){AbsValue+=fabs(c[i]-f[i]);}
-            for(i=0;i<ny+1;++i)f[i]=c[i];
-            if(AbsValue<5&&pets==PETS&&j==PETS){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
+            for(i=0;i<ny+1;++i)
+                AbsValue+=fabs(c[i]-f[i]);
+            for(i=0;i<ny+1;++i)
+                f[i]=c[i];
+            if(AbsValue<5&&pets==PETS&&j==PETS)
+            {
+                step=STEP*4.0;
+                pets=PETS/4;
+                ++cou;
+                j=0;
+                continue;
+            }
         }
         if(j%pets==0)
         {
-            ++cou;j=0;
+            ++cou;
+            j=0;
         }
     }
-    delete[] a;delete[] b;delete[] c;delete[] d;delete[] e;delete[] f;
-    for(i=0;i<DIMENSY;++i)delete[] TempMatrix[i];
+    delete[] a;
+    delete[] b;
+    delete[] c;
+    delete[] d;
+    delete[] e;
+    delete[] f;
+    for(i=0;i<DIMENSY;++i)
+        delete[] TempMatrix[i];
 }
 
 
@@ -232,24 +346,55 @@ void mainFunc::Network_1(double **ReguMatrix,int nx,int ny)
 void mainFunc::Network_2(double **Matr,int nx,int ny)
 {
     int i,j=0,cou=0;
-    double b[DIMENSY],AbsValue=10, c[DIMENSY];
-    for(i=0;i<ny;++i){nong[i]=INITIALVALUE;b[i]=nong[i];c[i]=b[i];}
-    int pets=PETS;double step=STEP;
+    double b[DIMENSY],AbsValue=10,c[DIMENSY];
+    for(i=0;i<ny;++i)
+        {
+            nong[i]=INITIALVALUE;
+            b[i]=nong[i];
+            c[i]=b[i];
+        }
+    int pets=PETS;
+    double step=STEP;
     while(AbsValue>0.0000001&&cou<MAXTIME) 
     {
         ++j;
-        for(i=0;i<ny;++i){nong[i]+=FaNexVal(Matr,b,nx,i,p,q,nn,r)*step;if(nong[i]<0.0000001){cou=MAXTIME+2;break;}}
+        for(i=0;i<ny;++i)
+            {
+                nong[i]+=FaNexVal(Matr,b,nx,i,p,q,nn,r)*step;
+                if(nong[i]<0.0000001)
+                    {
+                        cou=MAXTIME+2;
+                        break;
+                    }
+            }
         if(cou>=MAXTIME)break;                
-        for(i=0;i<ny;++i)b[i]=nong[i];
+        for(i=0;i<ny;++i)
+            b[i]=nong[i];
         if(j%(pets/8)==0)
         {
             AbsValue=0;
-            for(i=0;i<ny;++i){AbsValue+=fabs(nong[i]-c[i]);}
-            for(i=0;i<ny;++i)c[i]=nong[i];
-            if((AbsValue<5)&&(pets==PETS)&&(j==PETS)){step=STEP*4.0;pets=PETS/4;++cou;j=0;continue;}
+            for(i=0;i<ny;++i)
+                {
+                    AbsValue+=fabs(nong[i]-c[i]);
+                }
+            for(i=0;i<ny;++i)
+                c[i]=nong[i];
+            if((AbsValue<5)&&(pets==PETS)&&(j==PETS))
+                {
+                    step=STEP*4.0;
+                    pets=PETS/4;
+                    ++cou;
+                    j=0;
+                    continue;
+                }
         }
-        if(j%pets==0){++cou;j=0;}
+        if(j%pets==0)
+            {
+                ++cou;
+                j=0;
+            }
     }
     if(cou>=MAXTIME) 
-    for(i=0;i<ny;++i)nong[i]=-1;
+    for(i=0;i<ny;++i)
+        nong[i]=-1;
 }

@@ -15,52 +15,6 @@ using namespace std;
 
 int main(){
 /*
-    //the index is gengeNumber;
-    string dna[3];
-    dna[0] = "ATGAAACGCCCGGACTACAGAACATTACAGGCACTGGATGCGGTGATACGTGAACGAGGATTTGAGCGCGCGGCACAAAAGCTGTGCATTACACAATCAGCCGTCTCACAGCGCATTAAGCAACTGGAAAATATGTTCGGGCAGCCGCTGTTGGTGCGTACCGTACCGCCGCGCCCGACGGAACAAGGGCAAAAACTGCTGGCACTGCTGCGCCAGGTGGAGTTGCTGGAAGAAGAGTGGCTGGGCGATGAACAAACCGGTTCGACTCCGCTGCTGCTTTCACTGGCGGTCAACGCCGACAGTCTGGCGACGTGGTTGCTTCCTGCACTGGCTCCTGTGTTGGCTGATTCGCCTATCCGCCTCAACTTGCAGGTAGAAGATGAAACCCGCACTCAGGAACGTCTGCGCCGCGGCGAAGTGGTCGGCGCGGTGAGTATTCAACATCAGGCGCTGCCGAGTTGTCTTGTCGATAAACTTGGTGCGCTCGACTATCTGTTCGTCAGCTCAAAACCCTTTGCCGAAAAATATTTCCCTAACGGCGTAACGCGTTCGGCATTACTGAAAGCGCCAGTGGTCGCGTTTGACCATCTTGACGATATGCACCAGGCCTTTTTGCAGCAAAACTTCGATCTGCCTCCAGGCAGCGTGCCCTGCCATATCGTTAATTCTTCAGAAGCGTTCGTACAACTTGCTCGCCAGGGCACCACCTGCTGTATGATCCCGCACCTGCAAATCGAGAAAGAGCTGGCCAGCGGTGAACTGATTGACTTAACGCCTGGGCTATTTCAACGACGGATGCTCTACTGGCACCGCTTTGCTCCTGAAAGCCGCATGATGCGTAAAGTCACTGATGCGTTACTCGATTATGGTCACAAAGTCCTTCGTCAGGATTAA";
-    dna[1] = "ATGACGCAGGATGAATTGAAAAAAGCAGTAGGATGGGCGGCACTTCAGTATGTTCAGCCCGGCACCATTGTTGGTGTAGGTACAGGTTCCACCGCCGCACACTTTATTGACGCGCTCGGTACAATGAAAGGCCAGATTGAAGGGGCCGTTTCCAGTTCAGATGCTTCCACTGAAAAACTGAAAAGCCTCGGCATTCACGTTTTTGATCTCAACGAAGTCGACAGCCTTGGCATCTACGTTGATGGCGCAGATGAAATCAACGGCCACATGCAAATGATCAAAGGCGGCGGCGCGGCGCTGACCCGTGAAAAAATCATTGCTTCGGTTGCAGAAAAATTTATCTGTATTGCAGACGCTTCCAAGCAGGTTGATATTCTGGGTAAATTCCCGCTGCCAGTAGAAGTTATCCCGATGGCACGTAGTGCAGTGGCGCGTCAGCTGGTGAAACTGGGCGGTCGTCCGGAATACCGTCAGGGCGTGGTGACCGATAATGGCAACGTGATCCTCGACGTCCACGGCATGGAAATCCTTGACCCGATAGCGATGGAAAACGCCATAAATGCGATTCCTGGCGTGGTGACTGTTGGCTTGTTTGCTAACCGTGGCGCGGACGTTGCGCTGATTGGCACACCTGACGGTGTCAAAACCATTGTGAAATGA";
-    dna[2] = "ATGTCTTATCAGTATGTTAACGTTGTCACTATCAACAAAGTGGCGGTCATTGAGTTTAACTATGGCCGAAAACTTAATGCCTTAAGTAAAGTCTTTATTGATGATCTTATGCAGGCGTTAAGCGATCTCAACCGGCCGGAAATTCGCTGTATCATTTTGCGCGCACCGAGTGGATCCAAAGTCTTCTCCGCAGGTCACGATATTCACGAACTGCCGTCTGGCGGTCGCGATCCGCTCTCCTATGATGATCCATTGCGTCAAATCACCCGCATGATCCAAAAATTCCCGAAACCGATCATTTCGATGGTGGAAGGTAGTGTTTGGGGTGGCGCATTTGAAATGATCATGAGTTCCGATCTGATCATCGCCGCCAGTACCTCAACCTTCTCAATGACGCCTGTAAACCTCGGCGTCCCGTATAACCTGGTCGGCATTCACAACCTGACCCGCGACGCGGGCTTCCACATTGTCAAAGAGCTGATTTTTACCGCTTCGCCAATCACCGCCCAGCGCGCGCTGGCTGTCGGCATCCTCAACCATGTTGTGGAAGTGGAAGAACTGGAAGATTTCACCTTACAAATGGCGCACCACATCTCTGAGAAAGCGCCGTTAGCCATTGCCGTTATCAAAGAAGAGCTGCGTGTACTGGGCGAAGCACACACCATGAACTCCGATGAATTTGAACGTATTCAGGGGATGCGCCGCGCGGTGTATGACAGCGAAGATTACCAGGAAGGGATGAACGCTTTCCTCGAAAAACGTAAACCTAATTTCGTTGGTCATTAA";
-    int dna_size[3];
-    dna_size[0] = 894;
-    dna_size[1] = 660;
-    dna_size[2] = 786;
-    
-    //cout << dna[0].size() << endl;
-    //cout << dna[1].size() << endl;
-    //cout << dna[2].size() << endl;
-    
-    Sequence DNA_Array[3];
-    
-    //initialize DNA_Array;
-    for (int geneNumber = 0; geneNumber != 3; ++geneNumber) {
-        DNA_Array[geneNumber].initializeGeneSequence(dna[geneNumber], geneNumber, dna_size[geneNumber], 0);
-        DNA_Array[geneNumber].translation();
-    }
-    
-    int m_size = 2;
-    double old_grn[170][170];
-    for (int i = 0; i != 170; ++i) {
-        for (int j = 0; j != 170; ++j) {
-            old_grn[i][j] = 2;
-        }
-    }
-    old_grn[0][0] = 0;
-    old_grn[0][1] = -1;
-    old_grn[1][0] = 1;
-    old_grn[1][1] = 2;
-    
-    GRN test_GRN;
-    test_GRN.initializeGRN(old_grn, m_size);
-    test_GRN.constructNewGRN(DNA_Array);
-    for (int i = 0; i != 5; ++i) {
-        for (int j = 0; j != 5; ++j) {
-            cout << test_GRN.newGRNCorrelation[i][j] << '\t';
-        }
-        cout << endl;
-    }
-*/
-//=====================================================================================；
-
     string dna[166];
     int geneNum[166];
     int dna_size[166];
@@ -80,6 +34,7 @@ int main(){
     infile.close();
     //seq_array[166].test(" MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFAYGVQCFSRYPDHMKRHDFFKSAMPEGYVQERTIFFKDDGNYKTRAEVKFEGDTLVNRIELKGIDFKEDGNILGHKLEYNYNSHNVYIMADKQKNGIKVNFKIRHNIEDGSVQLADHYQQNTPIGDGPVLLPDNHYLSTQSVLSKDPNEKRDHMVLLEFVTAAGITHGMDELYK", 238);
     seq_array[166].test(" VHWQTHTVFNQPIPLNNSNLYLSDGALCEAVTREGAGWDSDFLASIGQQLGTAESLELGRLANVNPPELLRYDAQGRRLDDVRFHPAWHLLMQALCTNRVHNLAWEEDARSGAFVARAARFMLHAQVEAGSLCPITMTFAATPLLLQMLPAPFQDWTTPLLSDRYDSHLLPGGQKRGLLIGMGMTEKQGGSDVMSNTTRAERLEDGSYRLVGHKWFFSVPQSDAHLVLAQTAGGLSCFFVPRFLPDGQRNAIRLERLKDKLGNRSNASCEVEFQDAIGWLLGLEGEGIRLILKMGGMTRFDCALGSHAMMRRAFSLAIYHAHQRHVFGNPLIQQPLMRHVLSRMALQLEGQTALLFRLARAWDRRADAKEALWARLFTPAAKFVICKRGMPFVAEAMEVLGGIGYCEESELPRLYREMPVNSIWEGSGNIMCLDVLRVLNKQAGVYDLLSEAFVEVKGQDRYFDRAVRRLQQQLRKPAEELGREITHQLFLLGCGAQMLKYASPPMAQAWCQVMLDTRGGVRLSEQIQNDLLLRATGGVCV", 541);
+    //seq_array[166].test(" MCEGYVEKPLYLLIAEWMMAENRWVIAREISIHFDIEHSKAVNTLTYILSEVTEISCEVKMIPNKLEGRGCQCQRLVKVVDIDEQIYARLRNNSREKLVGVRKTPRIPAVPLTELNREQKWQMMLSKSMRR", 131);
     int m_size = 166;
     //intialize GRN;
     infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation_2.0");
@@ -123,64 +78,84 @@ int main(){
     struct tm *p;
     p = gmtime(&nowtime);
     char filename_1[256] ={ 0 };
-    string filename = "/Users/jinyang/Desktop/Parameter Data Test/row+colume ";
+    string filename = "/Users/jinyang/Desktop/Parameter Data Test/";
     sprintf(filename_1, "%d-%d %d%02d", 1 + p -> tm_mon, p -> tm_mday, 8 + p -> tm_hour, p -> tm_min);
     filename += filename_1;
-    filename += ".txt";
+    filename += " row+colume.txt";
     outfile.open(filename);
     for (int i = 0; i != 170; ++i) {
         outfile << i + 1 << '\t' << test_GRN.newGRNCorrelation[166][i] << '\t' << test_GRN.newGRNCorrelation[i][166]<< endl;
     }
     outfile << endl;
-    
- 
-//=====================================================================================;
-
-// rewrite regulation file, exchange 0 and 2;
-/*    ifstream infile;
-    int s[170][170];
-    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation");
-    for (int i = 0; i != 170; ++i) {
-        for (int j = 0; j != 170; ++j) {
-            infile >> s[i][j];
+    cout << (double)clock()/CLOCKS_PER_SEC << endl;
+*/
+    double **old_GRN;
+    old_GRN = new double*[1800];
+    for (int i = 0; i != 1800; ++i) {
+        old_GRN[i] = new double[220];
+    }
+    ifstream infile;
+    // Old_GRN is a matrix at the size 1800 * 220.
+    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/Old_GRN");
+    for (int i = 0; i != 1800; ++i) {
+        for (int j = 0; j != 220; ++j) {
+            infile >> old_GRN[i][j];
         }
     }
     infile.close();
-    for (int i = 0; i != 170; ++i) {
-        for (int j = 0; j != 170; ++j) {
-            switch (s[i][j]) {
-                case 2:
-                    s[i][j] = 0;
-                    break;
-                case 0:
-                    s[i][j] = 2;
-                    break;
-            }
-        }
+    GRN test_grn;
+    test_grn.initialize_GRN(old_GRN, 1749, 199);
+    Sequence sequence_array[1750];
+    int ru_num[1749] = { 0 };
+    string pro_array[1749];
+    int pro_size_array[1749] = { 0 };
+    string gene_array[1749];
+    int gene_size_array[1749] = { 0 };
+    infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/NO&PRE&DNA");
+    for (int i = 0; i != 1749; ++i) {
+        infile >> ru_num[i];
+        infile >> pro_array[i];
+        infile >> gene_array[i];
+        pro_size_array[i] = (int)pro_array[i].size();
+        gene_size_array[i] = (int)gene_array[i].size();
+        sequence_array[i].initialize_Sequence(ru_num[i],
+                                              pro_array[i],
+                                              pro_size_array[i],
+                                              gene_array[i],
+                                              gene_size_array[i]);
     }
+    infile.close();
+    int new_num = 1749;
+    string new_promoter = "CTTCACCGTCACTTCACATAGCTTCAAATTCTTCCCACATAGTCTTCGTATCCTGCTGCCATTGCAAAGGAGAAGACTATG";
+    string new_gene = "ATGCAGACCCCGCACATTCTTATCGTTGAAGACGAGTTGGTAACACGCAACACGTTGAAAAGTATTTTCGAAGCGGAAGGCTATGATGTTTTCGAAGCGACAGATGGCGCGGAAATGCATCAGATCCTCTCTGAATATGACATCAACCTGGTGATCATGGATATCAATCTGCCGGGTAAGAACGGTCTTCTGTTAGCGCGTGAACTGCGCGAGCAGGCGAATGTTGCGTTGATGTTCCTGACTGGCCGTGACAACGAAGTCGATAAAATTCTCGGCCTCGAAATCGGTGCAGATGACTACATCACCAAACCGTTCAACCCGCGTGAACTGACGATTCGTGCACGCAACCTACTGTCCCGTACCATGAATCTGGGTACTGTCAGCGAAGAACGTCGTAGCGTTGAAAGCTACAAGTTCAATGGTTGGGAACTGGACATCAACAGCCGTTCGTTGATCGGCCCTGATGGCGAGCAGTACAAGCTGCCGCGCAGCGAGTTCCGCGCCATGCTTCACTTCTGTGAAAACCCAGGCAAAATTCAGTCCCGTGCTGAACTGCTGAAGAAAATGACCGGCCGTGAGCTGAAACCGCACGACCGTACTGTAGACGTGACGATCCGCCGTATTCGTAAACATTTCGAATCTACGCCGGATACGCCGGAAATCATCGCCACCATTCACGGTGAAGGTTATCGCTTCTGCGGTGATCTGGAAGATTAA";
+    sequence_array[1749].initialize_Sequence(new_num,
+                                             new_promoter,
+                                             (int)new_promoter.size(),
+                                             new_gene,
+                                             (int)new_gene.size());
+    test_grn.construct_new_GRN(sequence_array);
     ofstream outfile;
-    outfile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/regulation_2.0");
-    for (int i = 0; i != 170; ++i) {
-        for (int j = 0; j != 170; ++j) {
-            outfile << s[i][j] << '\t';
-        }
-        outfile << endl;
-    }*/
-   
-/*
-    double x = 0;
-    Sequence s;
-    Sequence t;
-    s.aminoAcidSequence = " HEAGAWGHEE";
-    t.aminoAcidSequence = " PAWHEAE";
-    s.aminoASSize = 10;
-    t.aminoASSize = 7;
-    GRN test;
-    test.loadMatrixBLOSUM_XX();
-    x = test.aminoASAlignment(s.aminoAcidSequence, s.aminoASSize, t.aminoAcidSequence, t.aminoASSize);
-    cout << x << endl;
-*/
-
+    //use system time as file name;
+    time_t nowtime = time(NULL);
+    struct tm *p;
+    p = gmtime(&nowtime);
+    char filename_1[256] ={ 0 };
+    string filename = "/Users/jinyang/Desktop/Parameter Data Test/";
+    sprintf(filename_1, "%d-%d %d%02d", 1 + p -> tm_mon, p -> tm_mday, 8 + p -> tm_hour, p -> tm_min);
+    filename += filename_1;
+    filename += " row+colume.txt";
+    outfile.open(filename);
+    for (int i = 0; i != 220; ++i) {
+        outfile << i + 1 << '\t' << test_grn.new_GRN[1749][i] << endl;
+    }
+    outfile << endl;
+    for (int i = 0; i != 1800; ++i) {
+        outfile << i + 1 << '\t' << test_grn.new_GRN[i][199] << endl;
+    }
+    outfile << endl;
+    outfile << (double)clock()/CLOCKS_PER_SEC << endl;
+    outfile.close();
+    cout << (double)clock()/CLOCKS_PER_SEC << endl;
 }
 
 

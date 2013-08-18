@@ -15,185 +15,213 @@
 #include <cmath>
 #include <stdlib.h>
 
-#define GAP -8 //Gap penalty;
+#define GAP -8 //AAS Gap penalty;
+#define GAP_2 -1 //Promoter sequence gap penalty;
 #define RAND_SCALE 100 //Filtering module: the number of random sequence;
 #define SIGMA_NUM 0.2//Filtering module: numbers of sigma;
 
-void GRN::initializeGRN(double oldGRN[][scale], int mSize){
+void GRN::initialize_GRN(double **old_GRN, int num_row, int num_column) {
     srand((unsigned)time(0));
-    for (int i = 0; i != scale; ++i) {
-        for (int j = 0; j != scale; ++j) {
-            //Choose direction of regulation if it is +/-(2);
-            if (oldGRN[i][j] == 2) {
+    for (int i = 0; i != 1800; ++i) {
+        for (int j = 0; j != 220; ++j) {
+            //Chooses direction of regulation if it is +/-(2);
+            if (old_GRN[i][j] == 2) {
                 if (((rand() % 100) / 100.0) < 0.5) {
-                    newGRNCorrelation[i][j] = 0;
-                }else{
-                    newGRNCorrelation[i][j] = 0;
+                    new_GRN[i][j] = 0;
+                } else {
+                    new_GRN[i][j] = 0;
                 }
             }else{
-                newGRNCorrelation[i][j] = oldGRN[i][j];
+                new_GRN[i][j] = old_GRN[i][j];
             }
         }
     }
-    matrixSize = mSize;
+    number_row = num_row;
+    number_column = num_column;
 }
-void GRN::constructNewGRN(Sequence seqArry[]){
-    double simiMatrix[170] = { 0 };
-    loadMatrixBLOSUM_XX();
-//*************************************************************************************；
-// method_1:
-//          Default new gene has regulatory relation with all genes.
-//*************************************************************************************；
-    //generate similarity matrix;
-    for (int geneNum = 0; geneNum != matrixSize; ++geneNum) {
-        simiMatrix[geneNum] = aminoASAlignment(seqArry[geneNum].aminoAcidSequence, seqArry[geneNum].aminoASSize, seqArry[matrixSize].aminoAcidSequence, seqArry[matrixSize].aminoASSize);
+void GRN::construct_new_GRN(Sequence reg_unit[]) {
+    double promoter_similarity[1800] = { 0 };
+    double gene_similarity[220] = { 0 };
+    load_matrix_BLOSUM();
+    // Generates promoter similarity matrix.
+    for (int RU_number = 0; RU_number != number_row; ++RU_number) {
+        promoter_similarity[RU_number] =
+        DNASeqAlignment(reg_unit[number_row].promoter_sequence,
+                        reg_unit[number_row].promoter_size,
+                        reg_unit[RU_number].promoter_sequence,
+                        reg_unit[RU_number].promoter_size);
+        std::cout << "promoter simi: " << RU_number << '\t' <<
+        promoter_similarity[RU_number] << std::endl;
     }
-    //Filtering;
-    for (int geneNum = 0; geneNum != matrixSize; ++geneNum) {
-        RandSeq randSizer[RAND_SCALE];
+    // Generates gene similarity matrix.
+    for (int RU_number = 0; RU_number != number_column; ++RU_number) {
+        gene_similarity[RU_number] =
+        AminoAcidSeqAlignment(
+                              reg_unit[number_row].amino_acid_sequence,
+                              reg_unit[number_row].amino_acid_sequence_size,
+                              reg_unit[RU_number].amino_acid_sequence,
+                              reg_unit[RU_number].amino_acid_sequence_size);
+        std::cout << "gene simi: " << RU_number  << '\t' <<
+        gene_similarity[RU_number] << std::endl;
+    }
+    // Filters promoter similarity matrix.
+    /*for (int RU_number = 0; RU_number != number_row; ++RU_number) {
+        if (promoter_similarity[RU_number] < 0.53) {
+            promoter_similarity[RU_number] = 0;
+        }
+    }*/
+    // Filters gene similarity matrix.
+    for (int RU_number = 0; RU_number != number_column; ++RU_number) {
+        RandomSequence random_sequence[RAND_SCALE];
         double sizer = 0;
         double sigma = 0;
-        double filterSimi[RAND_SCALE] = { 0 };
-        //initialize random sizer at the same size as query sequence;
+        double random_similarity[RAND_SCALE] = { 0 };
+        // Initialize random sizer at the same size as query sequence.
         for (int i = 0; i != RAND_SCALE; ++i) {
-            randSizer[i].GenRandSeq(seqArry[matrixSize].aminoASSize);
-            filterSimi[i] = aminoASAlignment(randSizer[i].randAAS, seqArry[matrixSize].aminoASSize, seqArry[geneNum].aminoAcidSequence, seqArry[geneNum].aminoASSize);
-            sizer += filterSimi[i];
+            random_sequence[i].generate_random_amino_acid_sequence(
+                reg_unit[number_column].amino_acid_sequence_size);
+            random_similarity[i] =
+            AminoAcidSeqAlignment(random_sequence[i].random_amino_acid_sequence,
+                             reg_unit[number_column].amino_acid_sequence_size,
+                             reg_unit[RU_number].amino_acid_sequence,
+                             reg_unit[RU_number].amino_acid_sequence_size);
+            sizer += random_similarity[i];
         }
-        sizer = sizer / RAND_SCALE; //Average random similarity, i.e. threshold for Hill F.
+        sizer = sizer / RAND_SCALE; 
         for (int i = 0; i != RAND_SCALE; ++i) {
-            sigma += pow( filterSimi[i]- sizer, 2);
+            sigma += pow(random_similarity[i]- sizer, 2);
         }
-        sigma = pow(sigma, 0.5);//Standard deviation;
-        sizer = sizer + sigma * SIGMA_NUM;//Set (SIGMA_NUM * sigma) as threshold;
-        if (simiMatrix[geneNum] < sizer) {
-            simiMatrix[geneNum] = 0;
+        // Standard deviation.
+        sigma = pow(sigma, 0.5);
+        // Set (SIGMA_NUM * sigma) as threshold.
+        sizer = sizer + sigma * SIGMA_NUM;
+        if (gene_similarity[RU_number] < sizer) {
+            gene_similarity[RU_number] = 0;
         }
+        std::cout << "filtering: " << RU_number << std::endl;
     }
-    //insert new correlations to (matrixSize + 1) row;
-    for (int j_geneNum = 0; j_geneNum != matrixSize; ++j_geneNum) {
-        int counter_pos = 0;
-        int counter_neg = 0;
-        double sigfSimi_pos = 0;//Significant similarity of the row;
-        double meanSimi_pos = 0;//Average similarity of postive reg;
-        double Regu_pos = 0;//Reg of postives;
-        double sigfSimi_neg = 0;
-        double meanSimi_neg = 0;
-        double Regu_neg = 0;
-        for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
-            if (newGRNCorrelation[i_geneNum][j_geneNum] == 1) {//Test direction of reg;
-                if (sigfSimi_pos < simiMatrix[i_geneNum]) {//Record significant simi;
-                    sigfSimi_pos = simiMatrix[i_geneNum];
-                }
-                meanSimi_pos += simiMatrix[i_geneNum];//Calcu. average simi: sum;
-                Regu_pos += newGRNCorrelation[i_geneNum][j_geneNum] * simiMatrix[i_geneNum];//Calcu. postive reg for the new;
-                if (simiMatrix[i_geneNum] != 0) {
-                    counter_pos += 1;//Counter of postive reg;
-                }
-            }else if (newGRNCorrelation[i_geneNum][j_geneNum] == -1){
-                if (sigfSimi_neg < simiMatrix[i_geneNum]) {
-                    sigfSimi_neg = simiMatrix[i_geneNum];
-                }
-                meanSimi_neg += simiMatrix[i_geneNum];
-                Regu_neg += newGRNCorrelation[i_geneNum][j_geneNum] * simiMatrix[i_geneNum];
-                if (simiMatrix[i_geneNum] != 0) {
-                    counter_neg += 1;
+    // Insert new correlations to (number_row + 1) row.
+    for (int j_RU_number = 0; j_RU_number != number_column; ++j_RU_number) {
+        int counter_positive = 0;
+        int counter_negative = 0;
+        double average_similarity_positive = 0;
+        double regulation_positive = 0;
+        double average_similarity_negative = 0;
+        double regulation_negative = 0;
+        for (int i_RU_number = 0; i_RU_number != number_row; ++i_RU_number) {
+            if (reg_unit[i_RU_number].promoter_sequence ==
+                reg_unit[number_row].promoter_sequence) {
+                if (new_GRN[i_RU_number][j_RU_number] == 1) {
+                    average_similarity_positive +=
+                        promoter_similarity[i_RU_number];
+                    regulation_positive += new_GRN[i_RU_number][j_RU_number] *
+                        promoter_similarity[i_RU_number];
+                    if (promoter_similarity[i_RU_number] != 0) {
+                        counter_positive += 1;
+                    }
+                } else if (new_GRN[i_RU_number][j_RU_number] == -1) {
+                    average_similarity_negative +=
+                        promoter_similarity[i_RU_number];
+                    regulation_negative += new_GRN[i_RU_number][j_RU_number] *
+                        promoter_similarity[i_RU_number];
+                    if (promoter_similarity[i_RU_number] != 0) {
+                        counter_negative += 1;
+                    }
                 }
             }
         }
-        if (counter_pos != 0) {
-            meanSimi_pos = meanSimi_pos / counter_pos;//Calcu average simi: mean;
-            Regu_pos = Regu_pos / counter_pos;
-        }else{
-            meanSimi_pos = 0;
-            Regu_pos = 0;
+        if (counter_positive != 0) {
+            average_similarity_positive = average_similarity_positive /
+                                          counter_positive;
+            regulation_positive = regulation_positive / counter_positive;
+        } else {
+            average_similarity_positive = 0;
+            regulation_positive = 0;
         }
-        if (counter_neg != 0) {
-            meanSimi_neg = meanSimi_neg / counter_neg;
-            Regu_neg = Regu_neg / counter_neg;
-        }else{
-            meanSimi_neg = 0;
-            Regu_neg = 0;
+        if (counter_negative != 0) {
+            average_similarity_negative = average_similarity_negative /
+                                          counter_negative;
+            regulation_negative = regulation_negative / counter_negative;
+        } else {
+            average_similarity_negative = 0;
+            regulation_negative = 0;
         }
-        if (meanSimi_pos > meanSimi_neg) {//Test signigicance, choose the sigf one;
-            newGRNCorrelation[matrixSize][j_geneNum] = Regu_pos;
-        }else if (meanSimi_pos < meanSimi_neg){
-            newGRNCorrelation[matrixSize][j_geneNum] = Regu_neg;
-        }else{//If equal, choose random;
+        if (average_similarity_positive > average_similarity_negative) {
+            new_GRN[number_row][j_RU_number] = regulation_positive;
+        } else if (average_similarity_positive < average_similarity_negative) {
+            new_GRN[number_row][j_RU_number] = regulation_negative;
+        } else {// If equal, chooses random;
             switch (rand() % 2) {
                 case 0:
-                    newGRNCorrelation[matrixSize][j_geneNum] = Regu_pos;
+                    new_GRN[number_row][j_RU_number] = regulation_positive;
                     break;
                 case 1:
-                    newGRNCorrelation[matrixSize][j_geneNum] = Regu_neg;
+                    new_GRN[number_row][j_RU_number] = regulation_negative;
                     break;
             }
         }
+        std::cout << j_RU_number << std::endl;
     }
-    //insert new correlations to (matrixSize + 1) column;
-    for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
-        int counter_pos = 0;
-        int counter_neg = 0;
-        double sigfSimi_pos = 0;
-        double meanSimi_pos = 0;
-        double Regu_pos = 0;
-        double sigfSimi_neg = 0;
-        double meanSimi_neg = 0;
-        double Regu_neg = 0;
-        for (int j_geneNum = 0; j_geneNum != matrixSize; ++j_geneNum) {
-            if (newGRNCorrelation[i_geneNum][j_geneNum] == 1) {
-                if (sigfSimi_pos < simiMatrix[j_geneNum]) {
-                    sigfSimi_pos = simiMatrix[j_geneNum];
+    // Insert new correlations to (number_cloumn + 1) column;
+    for (int i_RU_number = 0; i_RU_number != number_row; ++i_RU_number) {
+        int counter_positive = 0;
+        int counter_negative = 0;
+        double average_similarity_positive = 0;
+        double regulation_positive = 0;
+        double average_similarity_negative = 0;
+        double regulation_negative = 0;
+        for (int j_RU_number = 0; j_RU_number != number_column; ++j_RU_number) {
+            if (new_GRN[i_RU_number][j_RU_number] == 1) {
+                average_similarity_positive += gene_similarity[j_RU_number];
+                regulation_positive += new_GRN[i_RU_number][j_RU_number] *
+                gene_similarity[j_RU_number];
+                if (gene_similarity[j_RU_number] != 0) {
+                    counter_positive += 1;
                 }
-                meanSimi_pos += simiMatrix[j_geneNum];
-                Regu_pos += newGRNCorrelation[i_geneNum][j_geneNum] * simiMatrix[j_geneNum];
-                if (simiMatrix[j_geneNum] != 0) {
-                    counter_pos += 1;
-                }
-            }else if (newGRNCorrelation[i_geneNum][j_geneNum] == -1){
-                if (sigfSimi_neg < simiMatrix[j_geneNum]) {
-                    sigfSimi_neg = simiMatrix[j_geneNum];
-                }
-                meanSimi_neg += simiMatrix[j_geneNum];
-                Regu_neg += newGRNCorrelation[i_geneNum][j_geneNum] * simiMatrix[j_geneNum];
-                if (simiMatrix[j_geneNum] != 0) {
-                    counter_neg += 1;
+            }else if (new_GRN[i_RU_number][j_RU_number] == -1){
+                average_similarity_negative += gene_similarity[j_RU_number];
+                regulation_negative += new_GRN[i_RU_number][j_RU_number] *
+                gene_similarity[j_RU_number];
+                if (gene_similarity[j_RU_number] != 0) {
+                    counter_negative += 1;
                 }
             }
         }
-        if (counter_pos != 0) {
-            meanSimi_pos = meanSimi_pos / counter_pos;//Calcu average simi: mean;
-            Regu_pos = Regu_pos / counter_pos;
-        }else{
-            meanSimi_pos = 0;
-            Regu_pos = 0;
+        if (counter_positive != 0) {
+            average_similarity_positive = average_similarity_positive /
+            counter_positive;
+            regulation_positive = regulation_positive / counter_positive;
+        } else {
+            average_similarity_positive = 0;
+            regulation_positive = 0;
         }
-        if (counter_neg != 0) {
-            meanSimi_neg = meanSimi_neg / counter_neg;
-            Regu_neg = Regu_neg / counter_neg;
-        }else{
-            meanSimi_neg = 0;
-            Regu_neg = 0;
+        if (counter_negative != 0) {
+            average_similarity_negative = average_similarity_negative /
+            counter_negative;
+            regulation_negative = regulation_negative / counter_negative;
+        } else {
+            average_similarity_negative = 0;
+            regulation_negative = 0;
         }
-        if (meanSimi_pos > meanSimi_neg) {
-            newGRNCorrelation[i_geneNum][matrixSize] = Regu_pos;
-        }else if (meanSimi_pos < meanSimi_neg){
-            newGRNCorrelation[i_geneNum][matrixSize] = Regu_neg;
-        }else{
+        if (average_similarity_positive > average_similarity_negative) {
+            new_GRN[i_RU_number][number_column] = regulation_positive;
+        } else if (average_similarity_positive < average_similarity_negative) {
+            new_GRN[i_RU_number][number_column] = regulation_negative;
+        } else {//If equal, chooses random;
             switch (rand() % 2) {
                 case 0:
-                    newGRNCorrelation[i_geneNum][matrixSize] = Regu_pos;
+                    new_GRN[i_RU_number][number_column] = regulation_positive;
                     break;
                 case 1:
-                    newGRNCorrelation[i_geneNum][matrixSize] = Regu_neg;
+                    new_GRN[i_RU_number][number_column] = regulation_negative;
                     break;
             }
         }
+        std::cout << i_RU_number << std::endl;
     }
-    
-    newGRNCorrelation[matrixSize][matrixSize] = 0;
-    
-    
+    new_GRN[number_row][number_column] = 0;
+    // TODO(jinyangustc@gmail.com): If can't get ideal result, wirte a module to
+    //                              filter low correlations in the column.
     //use system time as file name;
     std::ofstream outfile;
     time_t nowtime = time(NULL);
@@ -201,194 +229,180 @@ void GRN::constructNewGRN(Sequence seqArry[]){
     p = gmtime(&nowtime);
     char filename_1[256] ={ 0 };
     std::string filename = "/Users/jinyang/Desktop/Parameter Data Test/";
-    sprintf(filename_1, "%d-%d %d%02d", 1 + p -> tm_mon, p -> tm_mday, 8 + p -> tm_hour, p -> tm_min);
+    sprintf(filename_1, "%d-%d %d%02d", 1 + p -> tm_mon, p -> tm_mday,
+                                        8 + p -> tm_hour, p -> tm_min);
     filename += filename_1;
-    filename += " simi & para.txt";
+    filename += " p_simi & g_simi & para.txt";
     outfile.open(filename);
-    for (int i = 0; i != 170; ++i) {
-        outfile << i + 1 << '\t' << simiMatrix[i] << std::endl;
+    for (int i = 0; i != 1800; ++i) {
+        outfile << i + 1 << '\t' << promoter_similarity[i] << std::endl;
+    }
+    outfile << std::endl;
+    for (int i = 0; i != 220; ++i) {
+        outfile << i + 1 << '\t' << gene_similarity[i] << std::endl;
     }
     outfile << std::endl;
     outfile << "Gap: " << GAP << std::endl;
     outfile << "Numbers of random sequence: " << RAND_SCALE << std::endl;
     outfile << "Sigma control: " << SIGMA_NUM << std::endl;
     outfile.close();
-
-//*************************************************************************************；
-//method_2:
-//         Default new gene has RR with top 3 similar gene.
-//*************************************************************************************；
-/*
-    double simiMatrix[170] = { 0 };
-    int top_3_index[3] = { 0 };
-    //insert new correlations '0' to (matrixSize + 1) row;
-    for (int j_geneNum = 0; j_geneNum != matrixSize; ++j_geneNum){
-        newGRNCorrelation[matrixSize][j_geneNum] = 0;
-    }
-    //insert new correlations '0' to (matrixSize + 1) column;
-    for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum){
-        newGRNCorrelation[i_geneNum][matrixSize] = 0;
-    }
-    newGRNCorrelation[matrixSize][matrixSize] = 0;
-    //generate similarity matrix;
-    for (int geneNum = 0; geneNum != matrixSize; ++geneNum) {
-        simiMatrix[geneNum] = aminoASAlignment(seqArry[geneNum].aminoAcidSequence, seqArry[geneNum].aminoASSize, seqArry[matrixSize].aminoAcidSequence, seqArry[matrixSize].aminoASSize);
-    }
-    //find out top 3 similar gene;
-    for (int geneNum = 0; geneNum != matrixSize; ++geneNum) {
-        if (simiMatrix[top_3_index[0]] < simiMatrix[geneNum]) {
-            top_3_index[0] = geneNum;//find out 1st similar gene;
-        }
-    }
-    for (int geneNum = 0; geneNum != matrixSize; ++geneNum) {
-        if (simiMatrix[top_3_index[1]] < simiMatrix[geneNum]) {
-            if (geneNum != top_3_index[0]) {
-                top_3_index[1] = geneNum;//find out 2nd similar gene;
-            }
-        }
-    }
-    for (int geneNum = 0; geneNum != matrixSize; ++geneNum) {
-        if (simiMatrix[top_3_index[2]] < simiMatrix[geneNum]) {
-            if (geneNum != top_3_index[0] && geneNum != top_3_index[1]) {
-                top_3_index[2] = geneNum;//find out 2nd similar gene;
-            }
-        }
-    }
-    //insert new correlations to (matrixSize + 1) row;
-    for (int i = 0; i != 3; ++i) {
-        int counter = 0;
-        for (int i_geneNum = 0; i_geneNum != matrixSize; ++i_geneNum) {
-            if (newGRNCorrelation[i_geneNum][top_3_index[i]] != 0) {
-                newGRNCorrelation[matrixSize][top_3_index[i]] += newGRNCorrelation[i_geneNum][top_3_index[i]] * simiMatrix[i_geneNum];
-                counter += 1;
-            }
-        }
-        if (counter != 0) {
-            newGRNCorrelation[matrixSize][top_3_index[i]]= newGRNCorrelation[matrixSize][top_3_index[i]] / counter;
-        }
-        else
-            newGRNCorrelation[matrixSize][top_3_index[i]] = 0;
-    }
-    //insert new correlations to (matrixSize + 1) column;
-    for (int i = 0; i != 3; ++i) {
-        int counter = 0;
-        for (int j_geneNum = 0; j_geneNum != matrixSize; ++j_geneNum) {
-            if (newGRNCorrelation[top_3_index[i]][j_geneNum] != 0) {
-                newGRNCorrelation[top_3_index[i]][matrixSize] += newGRNCorrelation[top_3_index[i]][j_geneNum] * simiMatrix[j_geneNum];
-                counter += 1;
-            }
-        }
-        if (counter != 0) {
-            newGRNCorrelation[top_3_index[i]][matrixSize]= newGRNCorrelation[top_3_index[i]][matrixSize] / counter;
-        }
-        else
-            newGRNCorrelation[top_3_index[i]][matrixSize] = 0;
-    }
-    //test module;
-    //std::cout << top_3_index[0] << std::endl;
-    //std::cout << top_3_index[1] << std::endl;
-    //std::cout << top_3_index[2] << std::endl;
-    std::ofstream outfile;
-    outfile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/similarity");
-    for (int i = 0; i != 170; ++i) {
-        outfile << i + 1 << '\t' << simiMatrix[i] << std::endl;
-    }
-    outfile.close();
-*/
 }
-
-
-double GRN::aminoASAlignment(std::string s, int s_size, std::string t, int t_size){
+double GRN::AminoAcidSeqAlignment(std::string query, int query_size,
+                                  std::string subject, int subject_size) {
     double G_ = GAP;
     double _G = GAP;
-    //double normalization_s = 0;
-    //double normalization_t = 0;
-    //double similarity = 0;
-    int s_length = 0;
-    int t_length = 0;
+    int query_length = 0;
+    int subject_length = 0;
     double positives = 0;
-    s_length = s_size;
-    t_length = t_size;
-    std::string commonSubsequence;
-    std::string s_sub;
-    std::string t_sub;
-    std::vector< std::vector<double> > alignMatrix (t_size + 1, std::vector<double>(s_size + 1));
+    query_length = query_size;
+    subject_length = subject_size;
+    std::string common_subsequence;
+    std::string query_sub;
+    std::string subject_sub;
+    std::vector< std::vector<double> > align_matrix
+        (subject_size + 1, std::vector<double>(query_size + 1));
     //initialize alignMatrix;
-    alignMatrix[0][0] = 0;
-    for (int i = 1; i != t_size + 1; ++i) {
-        alignMatrix[i][0] = alignMatrix[i - 1][0] + G_;
+    align_matrix[0][0] = 0;
+    for (int i = 1; i != subject_size + 1; ++i) {
+        align_matrix[i][0] = align_matrix[i - 1][0] + G_;
     }
-    for (int j = 1; j != s_size + 1; ++j) {
-        alignMatrix[0][j] = alignMatrix[0][j - 1] + _G;
+    for (int j = 1; j != query_size + 1; ++j) {
+        align_matrix[0][j] = align_matrix[0][j - 1] + _G;
     }
-    for (int i = 1; i != t_size + 1; ++i) {
-        for (int j = 1; j != s_size + 1; ++j) {
-            //alignMatrix[i][j] = maxValue(alignMatrix[i-1][j-1] + alignScore(s[j],t[i]), alignMatrix[i-1][j] + alignScore(s[j], ' '), alignMatrix[i][j-1] + alignScore(' ', t[i]));
+    for (int i = 1; i != subject_size + 1; ++i) {
+        for (int j = 1; j != query_size + 1; ++j) {
             double st = 0;
             double s_ = 0;
             double _t = 0;
-            st = alignMatrix[i - 1][j - 1] + alignScore(t[i], s[j]);
-            _t = alignMatrix[i - 1][j] + alignScore(t[i], ' ');
-            s_ = alignMatrix[i][j - 1] + alignScore(' ', s[j]);
-            alignMatrix[i][j] = maxValue(st, s_, _t);
+            st = align_matrix[i - 1][j - 1] +
+                 AminoAcidSequenceAlignScore(subject[i], query[j]);
+            _t = align_matrix[i - 1][j] +
+                 AminoAcidSequenceAlignScore(subject[i], ' ');
+            s_ = align_matrix[i][j - 1] +
+                 AminoAcidSequenceAlignScore(' ', query[j]);
+            align_matrix[i][j] = get_max_value(st, s_, _t);
         }
     }
-
-    for (int i = t_size, j = s_size; (i > 0 || j > 0); ) {
-        //for (int j = s_size; j != 0;) {
-            if ((i * j > 0) && (alignMatrix[i][j] == alignMatrix[i - 1][j - 1] + alignScore(t[i], s[j]))) {
-                if (s[j] == t[i]) {
-                    commonSubsequence += s[j];
-                    s_sub += s[j];
-                    t_sub += t[i];
-                }else{
-                    int simi_if = 0;
-                    simi_if = matrixBLOSUM_XX[alignIndex_BLOSUM50(s[j])][alignIndex_BLOSUM50(t[i])];
-                    if (simi_if >= 0) {
-                        commonSubsequence += '+';
+    for (int i = subject_size, j = query_size; (i > 0 || j > 0);) {
+            if (
+                (i * j > 0) && (
+                                align_matrix[i][j] ==
+                                align_matrix[i - 1][j - 1] +
+                                AminoAcidSequenceAlignScore(subject[i], query[j]
+                                                            )
+                                )
+                ) {
+                if (query[j] == subject[i]) {
+                    common_subsequence += query[j];
+                    query_sub += query[j];
+                    subject_sub += subject[i];
+                } else {
+                    int similarity_test = 0;
+                    similarity_test = BLOSUM[get_index_of_BLOSUM50(query[j])]
+                                            [get_index_of_BLOSUM50(subject[i])];
+                    if (similarity_test >= 0) {
+                        common_subsequence += '+';
                     }
-                    /*else{
-                        commonSubsequence += '#';
-                    }*/
-                    s_sub += s[j];
-                    t_sub += t[i];
+                    query_sub += query[j];
+                    subject_sub += subject[i];
                 }
-            
             i--;
             j--;
-            }else if((i > 0) && (alignMatrix[i][j] == alignMatrix[i - 1][j] +  alignScore(t[i], ' '))){
+            } else if ((i > 0) &&
+                     (align_matrix[i][j] == align_matrix[i - 1][j] +
+                      AminoAcidSequenceAlignScore(subject[i], ' '))) {
                 //insert a space into string_s;
-                s_length += 1;
-                s_sub += '-';
-                t_sub += t[i];
+                query_length += 1;
+                query_sub += '-';
+                subject_sub += subject[i];
                 i--;
-                //commonSubsequence += '#';
-            }else if ((j > 0) && (alignMatrix[i][j] == alignMatrix [i][j - 1] + alignScore(' ', s[j] ))){
+            } else if ((j > 0) &&
+                      (align_matrix[i][j] == align_matrix [i][j - 1] +
+                       AminoAcidSequenceAlignScore(' ', query[j] ))){
                 //insert a space into string_s;
-                t_length += 1;
-                t_sub += '-';
-                s_sub += s[j];
+                subject_length += 1;
+                subject_sub += '-';
+                query_sub += query[j];
                 j--;
-                //commonSubsequence += '#';
             }
-        //}
     }
-    //Give the positives;
-    //std::cout << "test_s: " << s_length << std::endl;
-    //std::cout << "test_t: " << t_length << std::endl;
-    //std::cout << s_sub << std::endl;
-    //std::cout << commonSubsequence << std::endl;
-    //std::cout << t_sub << std::endl;
-    positives = (double)commonSubsequence.size() / s_length;
+    positives = (double)common_subsequence.size() / query_length;
     return positives;
 }
-
-int GRN::alignScore (char t, char s)
-{
-    /*int score = 0;
-    int GG = 1;
-    int _G = 0;
-    int GT = 0;
+double GRN::DNASeqAlignment(std::string  query, int query_size,
+                            std::string subject, int subject_size) {
+    double G_ = GAP_2;
+    double _G = GAP_2;
+    int query_length = 0;
+    int subject_length = 0;
+    double positives = 0;
+    query_length = query_size;
+    subject_length = subject_size;
+    std::string common_subsequence;
+    // Records result of alignment.
+    std::string query_sub;
+    std::string subject_sub;
+    std::vector< std::vector<double> > align_matrix
+        (subject_size + 1, std::vector<double>(query_size + 1));
+    //initialize alignMatrix;
+    align_matrix[0][0] = 0;
+    for (int i = 1; i != subject_size + 1; ++i) {
+        align_matrix[i][0] = align_matrix[i - 1][0] + G_;
+    }
+    for (int j = 1; j != query_size + 1; ++j) {
+        align_matrix[0][j] = align_matrix[0][j - 1] + _G;
+    }
+    for (int i = 1; i != subject_size + 1; ++i) {
+        for (int j = 1; j != query_size + 1; ++j) {
+            double st = 0;
+            double s_ = 0;
+            double _t = 0;
+            st = align_matrix[i - 1][j - 1] +
+                 DNASequenceAlignScore(subject[i], query[j]);
+            _t = align_matrix[i - 1][j] +
+                 DNASequenceAlignScore(subject[i], ' ');
+            s_ = align_matrix[i][j - 1] +
+                 DNASequenceAlignScore(' ', query[j]);
+            align_matrix[i][j] = get_max_value(st, s_, _t);
+        }
+    }
+    for (int i = subject_size, j = query_size; (i > 0 || j > 0);) {
+        if ((i * j > 0) && (align_matrix[i][j] == align_matrix[i - 1][j - 1] +
+                            DNASequenceAlignScore(subject[i], query[j]))) {
+            if (query[j] == subject[i]) {
+                common_subsequence += query[j];
+                query_sub += query[j];
+                subject_sub += subject[i];
+            } else {
+                query_sub += query[j];
+                subject_sub += subject[i];
+            }
+            i--;
+            j--;
+        } else if ((i > 0) && (align_matrix[i][j] == align_matrix[i - 1][j] +
+                               DNASequenceAlignScore(subject[i], ' '))) {
+            //insert a space into string_s;
+            query_length += 1;
+            query_sub += '-';
+            subject_sub += subject[i];
+            i--;
+        } else if ((j > 0) && (align_matrix[i][j] == align_matrix[i][j - 1] +
+                               DNASequenceAlignScore(' ', query[j]))) {
+            //insert a space into string_s;
+            subject_length += 1;
+            subject_sub += '-';
+            query_sub += query[j];
+            j--;
+        }
+    }
+    positives = (double)common_subsequence.size() / query_length;
+    return positives;
+}
+int GRN::DNASequenceAlignScore(char t, char s) {
+    int score = 0;
+    int GG = 9;
+    int _G = GAP_2;
+    int GT = GAP_2;
     if (s == t)
         score = GG;
     else if (s == ' ')
@@ -396,27 +410,26 @@ int GRN::alignScore (char t, char s)
     else if (t == ' ')
         score = _G;
     else if (s != t)
-        score = GT;*/
+        score = GT;
+    return score;
+}
+int GRN::AminoAcidSequenceAlignScore (char t, char s) {
     int score = 0;
     int G_ = GAP;
     int index_s = 0;
     int index_t = 0;
-
     if (s == ' ') {
         score = G_;
-    }
-    else if ( t == ' '){
+    } else if ( t == ' ') {
         score = G_;
-    }
-    else if (s == t || s != t){
-        index_s = alignIndex_BLOSUM50(s);
-        index_t = alignIndex_BLOSUM50(t);
-        score = matrixBLOSUM_XX[index_s][index_t];
+    } else if (s == t || s != t) {
+        index_s = get_index_of_BLOSUM50(s);
+        index_t = get_index_of_BLOSUM50(t);
+        score = BLOSUM[index_s][index_t];
     }
     return score;
 }
-
-int GRN::alignIndex_BLOSUM50 (char s){
+int GRN::get_index_of_BLOSUM50 (char s) {
     switch (s) {
         case 'A':
             return 0;
@@ -478,89 +491,22 @@ int GRN::alignIndex_BLOSUM50 (char s){
         case 'V':
             return 19;
             break;
-    }
-}
-
-/*
-int GRN::alignIndex_BLOSUM62 (char s){
-    switch (s) {
-        case 'C':
-            return 0;
-            break;
-        case 'S':
-            return 1;
-            break;
-        case 'T':
-            return 2;
-            break;
-        case 'P':
-            return 3;
-            break;
-        case 'A':
-            return 4;
-            break;
-        case 'G':
-            return 5;
-            break;
-        case 'N':
-            return 6;
-            break;
-        case 'D':
-            return 7;
-            break;
-        case 'E':
-            return 8;
-            break;
-        case 'Q':
-            return 9;
-            break;
-        case 'H':
-            return 10;
-            break;
-        case 'R':
-            return 11;
-            break;
-        case 'K':
-            return 12;
-            break;
-        case 'M':
-            return 13;
-            break;
-        case 'I':
-            return 14;
-            break;
-        case 'L':
-            return 15;
-            break;
-        case 'V':
-            return 16;
-            break;
-        case 'F':
-            return 17;
-            break;
-        case 'Y':
-            return 18;
-            break;
-        case 'W':
-            return 19;
+        default:
             break;
     }
 }
-*/
-void GRN::loadMatrixBLOSUM_XX(){
+void GRN::load_matrix_BLOSUM() {
     std::ifstream infile;
     //make sure to fill in the correct path;
     infile.open("/Users/jinyang/Documents/iGEM_Programmes/GRN/BLOSUM_50");
     for (int i = 0; i != 20; ++i) {
         for (int j = 0; j != 20; ++j) {
-            infile >> matrixBLOSUM_XX[i][j];
+            infile >> BLOSUM[i][j];
         }
     }
     infile.close();
 }
-
-double GRN::maxValue (double a, double b, double c)
-{
+double GRN::get_max_value (double a, double b, double c) {
     if(a<b)
         a=b;
     if(a<c)

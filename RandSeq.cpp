@@ -10,13 +10,12 @@
 #include <iostream>
 #include <ctime>
 #include "stdlib.h"
-void RandSeq::GenRandSeq(int length){
-    //srand((unsigned)time(0));
+void RandomSequence::generate_random_amino_acid_sequence(int length){
     for (int i = 0; i != length; ++i) {
-        randAAS += GenRandAA();
+        random_amino_acid_sequence += GenerateRandomAminoAcid();
     }
 }
-char RandSeq::GenRandAA(){
+char RandomSequence::GenerateRandomAminoAcid(){
     switch (rand() % 20) {
         case 0:
             return 'A';
@@ -79,6 +78,5 @@ char RandSeq::GenRandAA(){
             return 'V';
             break;
     }
-    
 }
 

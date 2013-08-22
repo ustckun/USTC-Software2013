@@ -8,37 +8,44 @@
 
 #ifndef __GRN__GRN__
 #define __GRN__GRN__
-
-
-
-
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <cmath>
+#include "Sequence.h"
 class GRN{
 public:
-    GRN(){
-        for (int i = 0; i != scale; ++i) {
-            for (int j = 0; j != scale; ++j) {
-                newGRNCorrelation[i][j] = 2;
-            }
+    GRN() {
+        new_GRN = new double*[1800];
+        for (int i = 0; i != 1800; i++) {
+            new_GRN[i] = new double[220];
         }
         for (int i = 0; i != 20; ++i) {
             for (int j = 0; j != 20; ++j) {
-                matrixBLOSUM_62[i][j] = 0;
+                BLOSUM[i][j] = 0;
             }
         }
-        matrixSize = 0;
+        number_row = 0;
+        number_column = 0;
     }
-    void initializeGRN(double oldGRN[][scale], int mSize);
-    void constructNewGRN(Sequence seqArray[]);
-    double newGRNCorrelation[scale][scale];
+    double **new_GRN;
+    void initialize_GRN(double **old_GRN, int num_row, int num_column);
+    void construct_new_GRN(Sequence reg_unit[]);
+    double AminoAcidSeqAlignment(std::string query, int query_size,
+                                 std::string subject, int subject_size);
+    double DNASeqAlignment(std::string  query, int query_size,
+                                std::string subject, int subject_size);
+    void load_matrix_BLOSUM();
 private:
-    int matrixSize;
-    int matrixBLOSUM_62[20][20];
-    //Results of alignments are correlations;
-    double aminoASAlignment(std::string s, int s_size, std::string t, int t_size);
-    int alignScore (char s, char t);
-    double maxValue (double a, double b, double c);
-    int alignIndex_BLOSUM62(char s);
-    void loadMatrixBLOSUM_62();
+    // The number of rows.
+    int number_row;
+    // The number of columns.
+    int number_column;
+    int BLOSUM[20][20];
+    int AminoAcidSequenceAlignScore (char t, char s);
+    int DNASequenceAlignScore(char t, char s);
+    double get_max_value (double a, double b, double c);
+    int get_index_of_BLOSUM50(char s);
 };
 
 #endif /* defined(__GRN__GRN__) */

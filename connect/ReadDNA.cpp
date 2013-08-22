@@ -2,12 +2,12 @@
 //get gene number. sequence and length of sequence
 //
 
-#include"TFIM.h"
+#include"GeneIM.h"
 //#include"calculation.h"
 #include"Calculate.h"
 #include"Sequence.h"
 #include"GRN.h"
-#include"Regulation.h"
+#include"GetReady.h"
 #include"ReadDNA.h"
 #include"PSOPredict.h"
 #include"SBOL.h"

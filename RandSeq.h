@@ -10,14 +10,14 @@
 #define __Random_Sequence__RandSeq__
 
 #include <iostream>
-class RandSeq{
+class RandomSequence{
 public:
-    RandSeq(){
-        randAAS = " ";
+    RandomSequence(){
+        random_amino_acid_sequence = " ";
     }
-    void GenRandSeq(int length);
-    std::string randAAS;
+    void generate_random_amino_acid_sequence(int length);
+    std::string random_amino_acid_sequence;
 private:
-    char GenRandAA();
+    char GenerateRandomAminoAcid();
 };
 #endif /* defined(__Random_Sequence__RandSeq__) */

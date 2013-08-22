@@ -44,12 +44,19 @@ void GRN::construct_new_GRN(Sequence reg_unit[]) {
     double gene_similarity[220] = { 0 };
     load_matrix_BLOSUM();
     // Generates promoter similarity matrix.
+    std::vector<int> same_promoter_position;
+    int counter_same_promoter = 0;
     for (int RU_number = 0; RU_number != number_row; ++RU_number) {
         promoter_similarity[RU_number] =
         DNASeqAlignment(reg_unit[number_row].promoter_sequence,
                         reg_unit[number_row].promoter_size,
                         reg_unit[RU_number].promoter_sequence,
                         reg_unit[RU_number].promoter_size);
+        if (promoter_similarity[RU_number] == 1) {
+            same_promoter_position.push_back(RU_number);
+            std::cout << same_promoter_position[0] << std::endl;
+            counter_same_promoter += 1;
+        }
         std::cout << "promoter simi: " << RU_number << '\t' <<
         promoter_similarity[RU_number] << std::endl;
     }
@@ -64,12 +71,6 @@ void GRN::construct_new_GRN(Sequence reg_unit[]) {
         std::cout << "gene simi: " << RU_number  << '\t' <<
         gene_similarity[RU_number] << std::endl;
     }
-    // Filters promoter similarity matrix.
-    /*for (int RU_number = 0; RU_number != number_row; ++RU_number) {
-        if (promoter_similarity[RU_number] < 0.53) {
-            promoter_similarity[RU_number] = 0;
-        }
-    }*/
     // Filters gene similarity matrix.
     for (int RU_number = 0; RU_number != number_column; ++RU_number) {
         RandomSequence random_sequence[RAND_SCALE];
@@ -101,66 +102,137 @@ void GRN::construct_new_GRN(Sequence reg_unit[]) {
         std::cout << "filtering: " << RU_number << std::endl;
     }
     // Insert new correlations to (number_row + 1) row.
-    for (int j_RU_number = 0; j_RU_number != number_column; ++j_RU_number) {
-        int counter_positive = 0;
-        int counter_negative = 0;
-        double average_similarity_positive = 0;
-        double regulation_positive = 0;
-        double average_similarity_negative = 0;
-        double regulation_negative = 0;
-        for (int i_RU_number = 0; i_RU_number != number_row; ++i_RU_number) {
-            if (reg_unit[i_RU_number].promoter_sequence ==
-                reg_unit[number_row].promoter_sequence) {
-                if (new_GRN[i_RU_number][j_RU_number] == 1) {
+    if (counter_same_promoter != 0) {  // There are RUs have the same promoter
+                                       // as the new one's.
+        for (int j_RU_number = 0; j_RU_number != number_column; ++j_RU_number) {
+            int counter_positive = 0;
+            int counter_negative = 0;
+            double average_similarity_positive = 0;
+            double regulation_positive = 0;
+            double average_similarity_negative = 0;
+            double regulation_negative = 0;
+            for (int i_same_promoter = 0;
+                 i_same_promoter != counter_same_promoter; ++i_same_promoter) {
+                double promoter_followed_gene_similarity = 0;
+                promoter_followed_gene_similarity =
+                DNASeqAlignment(reg_unit[number_row].gene_sequence,
+                                reg_unit[number_row].gene_size,
+                                reg_unit[
+                                         same_promoter_position[i_same_promoter]
+                                         ].gene_sequence,
+                                reg_unit[
+                                         same_promoter_position[i_same_promoter]
+                                         ].gene_size);
+                if (new_GRN[same_promoter_position[i_same_promoter]]
+                           [j_RU_number] == 1) {
                     average_similarity_positive +=
-                        promoter_similarity[i_RU_number];
+                        promoter_followed_gene_similarity;
+                    regulation_positive +=
+                        new_GRN[same_promoter_position[i_same_promoter]]
+                               [j_RU_number] *
+                        promoter_followed_gene_similarity;
+                    counter_positive += 1;
+                } else if (new_GRN[same_promoter_position[i_same_promoter]]
+                           [j_RU_number] == -1) {
+                    average_similarity_negative +=
+                        promoter_followed_gene_similarity;
+                    regulation_negative +=
+                        new_GRN[same_promoter_position[i_same_promoter]]
+                               [j_RU_number] *
+                        promoter_followed_gene_similarity;
+                    counter_negative += 1;
+                }
+            }
+            if (counter_positive != 0) {
+                average_similarity_positive = average_similarity_positive /
+                                              counter_positive;
+                regulation_positive = regulation_positive / counter_positive;
+            } else {
+                average_similarity_positive = 0;
+                regulation_positive = 0;
+            }
+            if (counter_negative != 0) {
+                average_similarity_negative = average_similarity_negative /
+                                              counter_negative;
+                regulation_negative = regulation_negative / counter_negative;
+            } else {
+                average_similarity_negative = 0;
+                regulation_negative = 0;
+            }
+            if (average_similarity_positive > average_similarity_negative) {
+                new_GRN[number_row][j_RU_number] = regulation_positive;
+            } else if (average_similarity_positive <
+                       average_similarity_negative) {
+                new_GRN[number_row][j_RU_number] = regulation_negative;
+            } else {
+                switch (rand() % 2) {
+                    case 0:
+                        new_GRN[number_row][j_RU_number] =regulation_positive;
+                        break;
+                    case 1:
+                        new_GRN[number_row][j_RU_number] = regulation_negative;
+                        break;
+                }
+            }
+        }
+    } else {
+        for (int j_RU_number = 0; j_RU_number != number_column; ++j_RU_number) {
+            int counter_positive = 0;
+            int counter_negative = 0;
+            double average_similarity_positive = 0;
+            double regulation_positive = 0;
+            double average_similarity_negative = 0;
+            double regulation_negative = 0;
+            for (int i_RU_number = 0; i_RU_number != number_row;
+                 ++i_RU_number) {
+                if (new_GRN[i_RU_number][j_RU_number] == 1) {
+                    average_similarity_positive += gene_similarity[i_RU_number];
                     regulation_positive += new_GRN[i_RU_number][j_RU_number] *
-                        promoter_similarity[i_RU_number];
-                    if (promoter_similarity[i_RU_number] != 0) {
+                    gene_similarity[i_RU_number];
+                    if (gene_similarity[i_RU_number] != 0) {
                         counter_positive += 1;
                     }
-                } else if (new_GRN[i_RU_number][j_RU_number] == -1) {
-                    average_similarity_negative +=
-                        promoter_similarity[i_RU_number];
+                } else if (new_GRN[i_RU_number][j_RU_number] == -1){
+                    average_similarity_negative += gene_similarity[i_RU_number];
                     regulation_negative += new_GRN[i_RU_number][j_RU_number] *
-                        promoter_similarity[i_RU_number];
-                    if (promoter_similarity[i_RU_number] != 0) {
+                    gene_similarity[i_RU_number];
+                    if (gene_similarity[i_RU_number] != 0) {
                         counter_negative += 1;
                     }
                 }
             }
-        }
-        if (counter_positive != 0) {
-            average_similarity_positive = average_similarity_positive /
-                                          counter_positive;
-            regulation_positive = regulation_positive / counter_positive;
-        } else {
-            average_similarity_positive = 0;
-            regulation_positive = 0;
-        }
-        if (counter_negative != 0) {
-            average_similarity_negative = average_similarity_negative /
-                                          counter_negative;
-            regulation_negative = regulation_negative / counter_negative;
-        } else {
-            average_similarity_negative = 0;
-            regulation_negative = 0;
-        }
-        if (average_similarity_positive > average_similarity_negative) {
-            new_GRN[number_row][j_RU_number] = regulation_positive;
-        } else if (average_similarity_positive < average_similarity_negative) {
-            new_GRN[number_row][j_RU_number] = regulation_negative;
-        } else {// If equal, chooses random;
-            switch (rand() % 2) {
-                case 0:
-                    new_GRN[number_row][j_RU_number] = regulation_positive;
-                    break;
-                case 1:
-                    new_GRN[number_row][j_RU_number] = regulation_negative;
-                    break;
+            if (counter_positive != 0) {
+                average_similarity_positive = average_similarity_positive /
+                counter_positive;
+                regulation_positive = regulation_positive / counter_positive;
+            } else {
+                average_similarity_positive = 0;
+                regulation_positive = 0;
+            }
+            if (counter_negative != 0) {
+                average_similarity_negative = average_similarity_negative /
+                counter_negative;
+                regulation_negative = regulation_negative / counter_negative;
+            } else {
+                average_similarity_negative = 0;
+                regulation_negative = 0;
+            }
+            if (average_similarity_positive > average_similarity_negative) {
+                new_GRN[number_row][j_RU_number] = regulation_positive;
+            } else if (average_similarity_positive <
+                       average_similarity_negative) {
+                new_GRN[number_row][j_RU_number] = regulation_negative;
+            } else {//If equal, chooses random;
+                switch (rand() % 2) {
+                    case 0:
+                        new_GRN[number_row][j_RU_number] = regulation_positive;
+                        break;
+                    case 1:
+                        new_GRN[number_row][j_RU_number] = regulation_negative;
+                        break;
+                }
             }
         }
-        std::cout << j_RU_number << std::endl;
     }
     // Insert new correlations to (number_cloumn + 1) column;
     for (int i_RU_number = 0; i_RU_number != number_row; ++i_RU_number) {
@@ -178,7 +250,7 @@ void GRN::construct_new_GRN(Sequence reg_unit[]) {
                 if (gene_similarity[j_RU_number] != 0) {
                     counter_positive += 1;
                 }
-            }else if (new_GRN[i_RU_number][j_RU_number] == -1){
+            } else if (new_GRN[i_RU_number][j_RU_number] == -1){
                 average_similarity_negative += gene_similarity[j_RU_number];
                 regulation_negative += new_GRN[i_RU_number][j_RU_number] *
                 gene_similarity[j_RU_number];
@@ -189,7 +261,7 @@ void GRN::construct_new_GRN(Sequence reg_unit[]) {
         }
         if (counter_positive != 0) {
             average_similarity_positive = average_similarity_positive /
-            counter_positive;
+                                          counter_positive;
             regulation_positive = regulation_positive / counter_positive;
         } else {
             average_similarity_positive = 0;

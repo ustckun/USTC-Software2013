@@ -1,4 +1,4 @@
-// TFIM.cpp
+// GeneIM.cpp
 // use name to find gene information in database
 //
 //version 2.0
@@ -7,7 +7,7 @@
 //2 add notation
 //
 //***********************************************************************************************************
-//Regulation::readName has get all the gene's name from TF-TF regulation
+//GetReady::readName has get all the gene's name from TF-TF regulation
 //search all the Genes information in about 4400 genes information
 //it contains gene numbers, gene left position, gene right positon, gene ID in regulonDB and gene sequence
 //***********************************************************************************************************
@@ -15,34 +15,26 @@
 //interface:
 //char* getGeneSequence()
 //char* getGeneName()
-//int geneNumber
+//int gene_number
 //
 
-#include"TFIM.h"
-#include"Calculate.h"
-#include"Sequence.h"
-#include"GRN.h"
-#include"Regulation.h"
-#include"ReadDNA.h"
-#include"PSOPredict.h"
-#include"SBOL.h"
+#include"GeneIM.h"
 
-//#include"Regulation.h"
-#define aM 5000
+//#include"GetReady.h"
 
 //a function to find string b in string a
 
 //get 166 genes information in database
-void TFIM::getGeneInformation(map<string,string> dict)
+void GeneIM::getGeneInformation(map<string,string> dict)
 {
-	//ifstream data("TFIM");
+	//ifstream data("GeneIM");
 	//ofstream text("Sequence");
 	string allLine;
 	string tempLeft;
 	string tempRight;
-	if(dict.find(geneName)!=dict.end())
+	if(dict.find(gene_name)!=dict.end())
 	{
-		allLine=dict[geneName];
+		allLine=dict[gene_name];
 	char fullLine[10000];
 	int h=0;
 	while(allLine[h]!='\0')
@@ -58,99 +50,99 @@ void TFIM::getGeneInformation(map<string,string> dict)
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
 	tempLeft=p;
-	leftPosition=atoi(tempLeft.c_str());
+	left_position=atoi(tempLeft.c_str());
 	p=strtok(NULL,delims);
 	tempRight=p;
-	rightPosition=atoi(tempRight.c_str());
+	right_position=atoi(tempRight.c_str());
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
-	geneDescription=p;
+	gene_description=p;
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
 	p=strtok(NULL,delims);
-	geneSequence=p;
+	gene_sequence=p;
 	//i=aM+1;
 	//text.seekp(text.end);
-	//text<<geneNumber<<"	"<<geneSequence<<endl;
-	//fprintf(fp,"%s	%s\n",geneName,geneSequence);
+	//text<<gene_number<<"	"<<gene_sequence<<endl;
+	//fprintf(fp,"%s	%s\n",gene_name,gene_sequence);
 	//cout<<i<<endl;
 	//if(i==aM)
 	//	cout<<"can't find gene sequence"<<endl;
 	}
 	else
-		cout<<geneName<<endl;
+		cout<<gene_name<<endl;
 }
 
-//char *name has memory leaks so put name to private geneName
-void TFIM::putName()
+//char *name has memory leaks so put name to private gene_name
+void GeneIM::putName()
 {
 	for(int i=0;i<10;i++)
 	{
-		geneName[i]=name[i];
+		gene_name[i]=name[i];
 	}
 }
 
 //get Gene ID of regulonDB
-string TFIM::getID()
+string GeneIM::getID()
 {
 	return iD;
 }
 
 //get gene left end position in genome
-int TFIM::getLeftPosition()
+int GeneIM::getLeftPosition()
 {
-	return leftPosition;
+	return left_position;
 }
 
 //get gene right end position in genome
-int TFIM::getRightPosition()
+int GeneIM::getRightPosition()
 {
-	return rightPosition;
+	return right_position;
 }
 
 //get Gene sequence in database
-string TFIM::getGeneSequence()
+string GeneIM::getGeneSequence()
 {
-	return geneSequence;
+	return gene_sequence;
 }
 
 //if file not open it will return 1
-int TFIM::getFileError()
+int GeneIM::getFileError()
 {
-	return getError;
+	return get_error;
 }
 
-//because geneName is put into private this function return gene name
-char *TFIM::getGeneName()
+//because gene_name is put into private this function return gene name
+char *GeneIM::getGeneName()
 {
-	return geneName;
+	return gene_name;
 }
 
-/*int TFIM::getRNA()
+int GeneIM::getRNA()
 {
 	cout<<RNA<<endl;
 	return RNA;
-}*/
-
-string TFIM::getGeneDescription()
-{
-	return geneDescription;
 }
 
-void TFIM::putInPromoterName(string promoter)
+string GeneIM::getGeneDescription()
 {
-	promoterName=promoter;
+	return gene_description;
 }
 
-void TFIM::getPromoterIF(FILE *fp,map<string,string>dict)
+void GeneIM::putInPromoterName(string promoter)
 {
-	if(dict.find(promoterName)!=dict.end())
+	promoter_name=promoter;
+}
+
+void GeneIM::getPromoterIF(FILE *fp,map<string,string>dict)
+{
+	if(dict.find(promoter_name)!=dict.end())
 	{
-		promoterSequence=dict[promoterName];
-		//DATA<<geneNumber<<"	"<<promoterSequence<<"	"<<geneSequence<<endl;
-		fprintf(fp,"%d	%s	%s\n",geneNumber,promoterSequence.c_str(),geneSequence.c_str());
+		promoter_sequence=dict[promoter_name];
+		//DATA<<gene_number<<"	"<<promoter_sequence<<"	"<<gene_sequence<<endl;
+		fprintf(fp,"%d	%s	%s\n",gene_number,promoter_sequence.c_str(),gene_sequence.c_str());
 	}
 	else
-		cout<<promoterName<<endl;
+		cout<<promoter_name<<endl;
 }

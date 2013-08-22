@@ -1,10 +1,4 @@
-#include"TFIM.h"
-#include"Calculate.h"
-#include"Sequence.h"
-#include"GRN.h"
-#include"Regulation.h"
-#include"ReadDNA.h"
-#include"PSOPredict.h"
+#include"GeneIM.h"
 #include"SBOL.h"
 
 string SBOL::Combine(string title,string detail)
@@ -32,7 +26,7 @@ string SBOL::FormartEnd(string b)
 	return all;
 }
 
-void SBOL::CreatSBOL(string position,TFIM IM)
+void SBOL::CreatSBOL(string position,GeneIM IM)
 {
 	string FP=".xml";
 	string temp=IM.getGeneName();

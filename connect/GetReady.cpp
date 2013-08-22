@@ -1,4 +1,4 @@
-// Regulation.cpp
+// GetReady.cpp
 // Get regualtion matrix and 166 genes' names
 //
 // version 2.0
@@ -9,7 +9,7 @@
 //**********************************************************************************
 //this module read TF-TF regualtion from RegulonDB database
 //transform + - to +1 -1 and 0 if not relationships it will be 2
-//filter the name to class TFIM::geneName
+//filter the name to class GeneIM::gene_name
 //**********************************************************************************
 //
 //interface:
@@ -18,36 +18,29 @@
 //A to B 's regulation is originalMatrix[B][A]
 
 
-#include"TFIM.h"
-#include"Calculate.h"
-#include"Regulation.h"
-#include"ReadDNA.h"
-#include"Sequence.h"
-#include"GRN.h"
-#include"PSOPredict.h"
-#include"SBOL.h"
-#include"RandSeq.h"
+#include"GeneIM.h"
+#include"GetReady.h"
 
 
-void Regulation::getRegulationMatrix(TFIM geneFirst[])
+void GetReady::getRegulationMatrix(GeneIM temp_gene_IM[])
 {
-	readTFTF(geneFirst,originalGRN);
-	addTF(geneFirst);
-	TFAmount=geneAmount;
-	readTFGene(geneFirst,originalGRN);
+	readTFTF(temp_gene_IM,originalGRN);
+	addTF(temp_gene_IM);
+	TF_amount=gene_amount;
+	readTFGene(temp_gene_IM,originalGRN);
 }
 
-void Regulation::addTF(TFIM geneFirst[])
+void GetReady::addTF(GeneIM temp_gene_IM[])
 {
 	ifstream data("TF-Gene");
 	if(!data)
 	{
-		openFileError=1;
+		open_file_error=1;
 	}
 	else
-		openFileError=0;
+		open_file_error=0;
 	char ch;
-	int i=geneAmount;
+	int i=gene_amount;
 	data.get(ch);
 	char STRING1[TFScale][10];
 	char *Name;
@@ -72,18 +65,18 @@ void Regulation::addTF(TFIM geneFirst[])
 		for(j=0;j<i;j++)
 		{
 			strlwr(Name);
-			if(strcmp(geneFirst[j].geneName,Name)==0)
+			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
 				j=i+1;
 			}
 		}
 		if(j==i)
 		{
-			geneFirst[i].name=Name;
-			geneFirst[i].putName();
-			geneFirst[i].geneNumber=i;
+			temp_gene_IM[i].name=Name;
+			temp_gene_IM[i].putName();
+			temp_gene_IM[i].gene_number=i;
 			i++;
-			geneAmount++;
+			gene_amount++;
 		}
 		string noUse;
 		getline(data,noUse);
@@ -94,15 +87,15 @@ void Regulation::addTF(TFIM geneFirst[])
 		}
 	}
 }
-void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
+void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN)
 {
 	ifstream data("TF-Gene");
 	if(!data)
 	{
-		openFileError=1;
+		open_file_error=1;
 	}
 	else
-		openFileError=0;
+		open_file_error=0;
 	char ch;
 	int i,num=0;
 	//int geneAM,TFAM=0;
@@ -111,7 +104,7 @@ void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
 	//double originalMA[N][N];
 	int unknow=0;
 	data.get(ch);
-	for(i=geneAmount;i<GENEAM;)
+	for(i=gene_amount;i<GENEAM;)
 	{
 		int a,b;
 		//data.get(ch);
@@ -132,9 +125,9 @@ void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
 		int j;
 		for(j=0;j<i;j++)
 		{
-			//strlwr(geneFirst[j].name);
+			//strlwr(temp_gene_IM[j].name);
 			strlwr(Name);
-			if(strcmp(geneFirst[j].geneName,Name)==0)
+			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
 				a=j;
 				j=i+1;
@@ -142,9 +135,9 @@ void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
 		}
 		if(j==i)
 		{
-			geneFirst[i].name=Name;
-			geneFirst[i].putName();
-			geneFirst[i].geneNumber=i;
+			temp_gene_IM[i].name=Name;
+			temp_gene_IM[i].putName();
+			temp_gene_IM[i].gene_number=i;
 			a=i;
 			i++;
 		}
@@ -160,9 +153,9 @@ void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
 		Name=STRING1[i];
 		for(j=0;j<i;j++)
 		{
-			//strlwr(geneFirst[j].name);
+			//strlwr(temp_gene_IM[j].name);
 			strlwr(Name);
-			if(strcmp(geneFirst[j].geneName,Name)==0)
+			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
 				b=j;
 				j=i+1;
@@ -170,47 +163,47 @@ void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
 		}
 		if(j==i)
 		{
-			geneFirst[i].name=Name;
-			geneFirst[i].putName();
-			geneFirst[i].geneNumber=i;
+			temp_gene_IM[i].name=Name;
+			temp_gene_IM[i].putName();
+			temp_gene_IM[i].gene_number=i;
 			b=i;
 			i++;
 		}
-		//geneFirst[i].putName();
+		//temp_gene_IM[i].putName();
 		data.get(ch);
 		if(ch=='-')
 		{
-			if(GRN[b][a]==1||GRN[b][a]==2)
+			if(old_GRN[b][a]==1||old_GRN[b][a]==2)
 			{
-				GRN[b][a]=2;
-				uncertain1.push_back(b);
-				uncertain2.push_back(a);
+				old_GRN[b][a]=2;
+				uncertain_row.push_back(b);
+				uncertain_column.push_back(a);
 				unknow++;
 			}
 			else
-				GRN[b][a]=-1;
+				old_GRN[b][a]=-1;
 		}
 		else if(ch=='+')
 		{
 			data.get(ch);
 			if(ch=='-')
 			{
-				GRN[b][a]=2;
-				uncertain1.push_back(b);
-				uncertain2.push_back(a);
+				old_GRN[b][a]=2;
+				uncertain_row.push_back(b);
+				uncertain_column.push_back(a);
 				unknow++;
 			}
 			else
-				GRN[b][a]=1;
+				old_GRN[b][a]=1;
 		}
 		else
-			GRN[b][a]=0;
+			old_GRN[b][a]=0;
 		string noUse;
 		getline(data,noUse);
 		num=0;
 		if(!data.get(ch))
 		{
-			geneAmount=i;
+			gene_amount=i;
 			i=GENEAM;
 		}
 		//if(TFAM<a)
@@ -220,19 +213,19 @@ void Regulation::readTFGene(TFIM geneFirst[],double **GRN)
 	//memcpy((char *)originalMatrix,(char *)originalMA,sizeof(double)*N*N);
 	//originalMatrix=originalMA;
 	//cout<<TFAM<<endl;
-	//geneAmount=geneAM;
+	//gene_amount=geneAM;
 }
 
-//input:objexts of TFIM, read name and also get regulation, if file is not open int openFileError will be 1
-void Regulation::readTFTF(TFIM geneFirst[],double **GRN)
+//input:objexts of GeneIM, read name and also get regulation, if file is not open int open_file_error will be 1
+void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN)
 {
 	ifstream data("TF-TF");
 	if(!data)
 	{
-		openFileError=1;
+		open_file_error=1;
 	}
 	else
-		openFileError=0;
+		open_file_error=0;
 	char ch;
 	int i,num=0;
 	//int geneAM,TFAM=0;
@@ -262,9 +255,9 @@ void Regulation::readTFTF(TFIM geneFirst[],double **GRN)
 		int j;
 		for(j=0;j<i;j++)
 		{
-			strlwr(geneFirst[j].name);
+			strlwr(temp_gene_IM[j].name);
 			strlwr(Name);
-			if(strcmp(geneFirst[j].name,Name)==0)
+			if(strcmp(temp_gene_IM[j].name,Name)==0)
 			{
 				a=j;
 				j=i+1;
@@ -272,9 +265,9 @@ void Regulation::readTFTF(TFIM geneFirst[],double **GRN)
 		}
 		if(j==i)
 		{
-			geneFirst[i].name=Name;
-			geneFirst[i].putName();
-			geneFirst[i].geneNumber=i;
+			temp_gene_IM[i].name=Name;
+			temp_gene_IM[i].putName();
+			temp_gene_IM[i].gene_number=i;
 			a=i;
 			i++;
 		}
@@ -290,9 +283,9 @@ void Regulation::readTFTF(TFIM geneFirst[],double **GRN)
 		Name=STRING1[i];
 		for(j=0;j<i;j++)
 		{
-			strlwr(geneFirst[j].name);
+			strlwr(temp_gene_IM[j].name);
 			strlwr(Name);
-			if(strcmp(geneFirst[j].name,Name)==0)
+			if(strcmp(temp_gene_IM[j].name,Name)==0)
 			{
 				b=j;
 				j=i+1;
@@ -300,47 +293,47 @@ void Regulation::readTFTF(TFIM geneFirst[],double **GRN)
 		}
 		if(j==i)
 		{
-			geneFirst[i].name=Name;
-			geneFirst[i].putName();
-			geneFirst[i].geneNumber=i;
+			temp_gene_IM[i].name=Name;
+			temp_gene_IM[i].putName();
+			temp_gene_IM[i].gene_number=i;
 			b=i;
 			i++;
 		}
-		//geneFirst[i].putName();
+		//temp_gene_IM[i].putName();
 		data.get(ch);
 		if(ch=='-')
 		{
-			if(GRN[b][a]==1||GRN[b][a]==2)
+			if(old_GRN[b][a]==1||old_GRN[b][a]==2)
 			{
-				GRN[b][a]=2;
-				uncertain1.push_back(b);
-				uncertain2.push_back(a);
+				old_GRN[b][a]=2;
+				uncertain_row.push_back(b);
+				uncertain_column.push_back(a);
 				unknow++;
 			}
 			else
-				GRN[b][a]=-1;
+				old_GRN[b][a]=-1;
 		}
 		else if(ch=='+')
 		{
 			data.get(ch);
 			if(ch=='-')
 			{
-				GRN[b][a]=2;
-				uncertain1.push_back(b);
-				uncertain2.push_back(a);
+				old_GRN[b][a]=2;
+				uncertain_row.push_back(b);
+				uncertain_column.push_back(a);
 				unknow++;
 			}
 			else
-				GRN[b][a]=1;
+				old_GRN[b][a]=1;
 		}
 		else
-			GRN[b][a]=0;
+			old_GRN[b][a]=0;
 		string noUse;
 		getline(data,noUse);
 		num=0;
 		if(!data.get(ch))
 		{
-			TFAmount=i;
+			TF_amount=i;
 			i=TFScale;
 		}
 		//if(TFAM<a)
@@ -350,17 +343,17 @@ void Regulation::readTFTF(TFIM geneFirst[],double **GRN)
 	//memcpy((char *)originalMatrix,(char *)originalMA,sizeof(double)*N*N);
 	//originalMatrix=originalMA;
 	//cout<<TFAM<<endl;
-	geneAmount=TFAmount;
+	gene_amount=TF_amount;
 }
 
 //full fill the matrix with 2
-Regulation::Regulation()
+GetReady::GetReady()
 {
 	originalGRN=new double*[GENEAM];
 	for(int i=0;i<GENEAM;i++)
 		originalGRN[i]=new double[TFScale];
-	geneAmount=0;
-	openFileError=0;
+	gene_amount=0;
+	open_file_error=0;
 //	a=originalMatrix[0][0];
 	for(int n=0;n<TFScale;n++)
 	{
@@ -372,21 +365,21 @@ Regulation::Regulation()
 }
 
 //get amount of genes
-int Regulation::getGeneAmount()
+int GetReady::getGeneAmount()
 {
-	return geneAmount;
+	return gene_amount;
 }
 
 //know is file opened
-int Regulation::getOpenError()
+int GetReady::getOpenError()
 {
-	return openFileError;
+	return open_file_error;
 }
 
-map<string,string> Regulation::mapTFIM()
+map<string,string> GetReady::mapTFIM()
 {
 	map<string,string> dictTFIM;
-	ifstream data("TFIM");
+	ifstream data("GeneIM");
 	//ofstream text("Sequence");
 	char ch;
 	int i;
@@ -430,7 +423,7 @@ map<string,string> Regulation::mapTFIM()
 	//tempName="";
 }
 
-void Regulation::readTUPosition()
+void GetReady::readTUPosition()
 {
 	ifstream data("TUposition");
 	char ch;
@@ -467,36 +460,36 @@ void Regulation::readTUPosition()
 		}
 		TUPos[j]='\0';
 		string tempTUPos=TUPos;
-		promoterNameLib.push_back(ProName);
-		TUPositon.push_back(atoi(tempTUPos.c_str()));
+		promoter_name_dict.push_back(ProName);
+		TU_position.push_back(atoi(tempTUPos.c_str()));
 	}
 }
 
-int Regulation::getTFAmount()
+int GetReady::getTFAmount()
 {
-	return TFAmount;
+	return TF_amount;
 }
 
-void Regulation::getGenePromoter(TFIM geneFirst[])
+void GetReady::getGenePromoter(GeneIM temp_gene_IM[])
 {
 	int TUAmount;
-	TUAmount=TUPositon.size();
+	TUAmount=TU_position.size();
 	int target;
 	for(int i=0;i<getGeneAmount();i++)
 	{
 		int max=TUAmount,min=0;
 		for(int j=(max+min)/2;(max-min)!=1;j=(max+min)/2)
 		{
-			if(geneFirst[i].getLeftPosition()<=TUPositon[j])
+			if(temp_gene_IM[i].getLeftPosition()<=TU_position[j])
 				max=j;
 			else
 				min=j;
 		}
-		geneFirst[i].putInPromoterName(promoterNameLib[min]);
+		temp_gene_IM[i].putInPromoterName(promoter_name_dict[min]);
 	}
 }
 
-map<string,string> Regulation::mapPromoter()
+map<string,string> GetReady::mapPromoter()
 {
 	map<string,string> dictPromoter;
 	ifstream data("Promoters");

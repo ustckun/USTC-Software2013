@@ -3,32 +3,21 @@
 //  GRN
 //
 //  Created by jinyang on 13-7-26.
-//  Copyright (c) 2013Äê Li Jinyang. All rights reserved.
+//  Copyright (c) 2013 Li Jinyang. All rights reserved.
 //
 
-
-#include"TFIM.h"
-#include"Calculate.h"
-#include"Sequence.h"
-#include"GRN.h"
-#include"Regulation.h"
-#include"ReadDNA.h"
-#include"PSOPredict.h"
-#include"SBOL.h"
-
-void Sequence::initializeGeneSequence( std::string sequence,int number, int size ){
-    geneSequence += sequence;
-    geneNumber = number;
-    
-    //DNASize = size;
-    //aminoAcidSequence = size / 3 - 1;
-    
-    DNASize = size; //This is the size of DNA sequence and DOES NOT includes space.
-    aminoASSize = size / 3 - 1 + 1;//'_EXAMPLE#':8 - 1(termination codon) + 1(space);
-    //RNASequence +=sequence;
+#include "Sequence.h"
+void Sequence::initialize_Sequence(int RU_number, std::string promoter, int p_size,
+                                  std::string gene, int g_size) {
+    regulation_unit_number = RU_number;
+    gene_sequence += gene;
+    gene_size = g_size; //DOES NOT includes space.
+    promoter_sequence += promoter;
+    promoter_size = p_size;
+    Translation();
 }
     
-//****************************************************************************************
+//******************************************************************************
 //  Some explain of the transcription and translation process:
 //    1.Actually, the protein expression process is:
 //      DNA --> mRNA (i.e. transcription);
@@ -37,17 +26,17 @@ void Sequence::initializeGeneSequence( std::string sequence,int number, int size
 //    3.Codons are the sequence messages carried by mRNA;
 //      Take initiation codon "AUG" for example:
 //      ---ATG--- : DNA strand which doesn't take part in transcription process;
-//      ---TAC--- : DNA strand which exactlly takes part in transcription proess;
-//      ---AUG--- : mRNA strand which carries codons. In this case, it carries initiation
-//                 codon, i.e. "AUG";
+//      ---TAC--- : DNA strand which exactlly takes part in transcription
+//                  proess;
+//      ---AUG--- : mRNA strand which carries codons. In this case, it carries
+//                  initiation codon, i.e. "AUG";
 //      ---TAC--- : tRNA which also carries amino acid Methionine(M);
-//    4.Owing to the DNA sequences that our database provides are the UNEXPRESSION
-//      strands, the translation process of the program can just use DNA sequence without
-//      transcription. It should be noted that users have to enable the transcription
-//      module and modify appropriate lines if their databases use different strands of
-//      DNA sequences.
-//****************************************************************************************
-    
+//    4.Owing to the DNA sequences that our database provides are the
+//      UNEXPRESSION strands, the translation process of the program can just
+//      use DNA sequence without transcription. It should be noted that users
+//      have to enable the transcription module and modify appropriate lines if
+//      their databases use different strands of DNA sequences.
+//******************************************************************************
 //transcript gene sequence(DNA) into RNA sequence;
 /*void transcription(){
     for(int i = 1; i != geneSequence.size(); i++){
@@ -61,9 +50,8 @@ char transcript(char s){
     else if(s == 'T') return 'A';
     else if(s == 'C') return 'G';
 }*/
-    
 //translate RNA sequence into amino acid sequence;
-void Sequence::translation(){
+void Sequence::Translation(){
     //amino acid codon;
     //U or T = 0; C = 1; A = 2; G = 3;
     char codon[4][4][4] = {
@@ -94,45 +82,43 @@ void Sequence::translation(){
     };
     char mRNA[3];
     int index[3] = { 0 };
-    aminoAcidSequence = " ";
+    amino_acid_sequence = " ";
     //If need to use transcription module, replace geneSequence with RNASquence;
-    for (int i = 1; i < DNASize; i += 3) {
+    for (int i = 1; i < gene_size; i += 3) {
         //std::cout << i << std::endl;
-        mRNA[0] = geneSequence[i];
-        mRNA[1] = geneSequence[i + 1];
-        mRNA[2] = geneSequence[i + 2];
+        mRNA[0] = gene_sequence[i];
+        mRNA[1] = gene_sequence[i + 1];
+        mRNA[2] = gene_sequence[i + 2];
         //change A, U, C, G into number;
         for (int j = 0; j != 3; ++j) {
-            index[j] = translate(mRNA[j]);
+            index[j] = Translate(mRNA[j]);
         }
         if (codon[index[0]][index[1]][index[2]] != '#') {
-            aminoAcidSequence += codon[index[0]][index[1]][index[2]];
+            amino_acid_sequence += codon[index[0]][index[1]][index[2]];
         }
     }
+    amino_acid_sequence_size = (int)amino_acid_sequence.size() - 1;
 }
-int Sequence::translate(char s){
-    if (s == 'T') {
-        return 0;
-    }
-    if (s == 'U') {
-        return 0;
-    }
-    if (s == 'C') {
-        return 1;
-    }
-    if (s == 'A') {
-        return 2;
-    }
-    if (s == 'G') {
-        return 3;
+int Sequence::Translate(char s){
+    switch (s) {
+        case 'T':
+            return 0;
+            break;
+        case 'U':
+            return 0;
+            break;
+        case 'C':
+            return 1;
+            break;
+        case 'A':
+            return 2;
+            break;
+        case 'G':
+            return 3;
+            break;
+        default:
+            break;
     }
 }
-
-void Sequence::getNewASS(string insertGene,int n)
-{
-	geneNumber=n;
-	DNASize=insertGene.length()*3+3;
-	aminoASSize=insertGene.length();
-	aminoAcidSequence=insertGene;
-}
+    
 

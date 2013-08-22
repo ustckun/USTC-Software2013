@@ -1,11 +1,9 @@
-#include"TFIM.h"
-#include"Calculate.h"
-#include"Regulation.h"
-#include"ReadDNA.h"
+#include"GeneIM.h"
+#include"ModleNetwork.h"
+#include"GetReady.h"
 #include"Sequence.h"
 #include"GRN.h"
-#include"PSOPredict.h"
-#include"ReadRegulation.h"
+#include"PSO.h"
 #include"SBOL.h"
 
 int main()
@@ -17,23 +15,23 @@ int main()
 	//Calculate Hope;
 	//Hope.RandMatrix(matrix,reg,166);
 	//Hope.Network_1(matrix,166);
-	//for(int i=0;i<170;i++)cout<<Hope.consistence[i]<<endl;
-	TFIM test[GENEAM];
-	Regulation luck;
+	//for(int i=0;i<170;i++)cout<<Hope.value[i]<<endl;
+	GeneIM test[GENEAM];
+	GetReady luck;
 	//SBOL happy;
-	luck.readTUPosition();
-	/*for(int i=0;i<luck.TUPositon.size();i++)
+	//luck.readTUPosition();
+	/*for(int i=0;i<luck.TU_position.size();i++)
 	{
-		cout<<luck.promoterNameLib[i]<<"	"<<luck.TUPositon[i]<<endl;
+		cout<<luck.promoter_name_dict[i]<<"	"<<luck.TU_position[i]<<endl;
 	}*/
 	luck.getRegulationMatrix(test);
 	//luck.fullFill();
 	//ofstream dna("Old_GRN");
 	//ofstream DATA("NO&PRO&GENE");
-	FILE *fp;
-	fp=fopen("NO&PRE&DNA","w");
-	map<string,string> dict;
-	dict=luck.mapTFIM();
+	//FILE *fp;
+	//fp=fopen("NO&PRE&DNA","w");
+	//map<string,string> dict;
+	//dict=luck.mapTFIM();
 	/*for(int i=0;i<GENEAM;i++)
 	{
 		for(int j=0;j<TFScale;j++)
@@ -42,22 +40,26 @@ int main()
 		}
 		dna<<endl;
 	}*/
-	for(int i=0;i<luck.getGeneAmount();i++)
+	/*for(int i=0;i<luck.getGeneAmount();i++)
 	{
 		test[i].getGeneInformation(dict);
 		cout<<i<<endl;
-	}
+	}*/
 	//dict.erase(dict.begin(),dict.end());
-	luck.readTUPosition();
-	luck.getGenePromoter(test);
-	dict=luck.mapPromoter();
-	for(int i=0;i<luck.getGeneAmount();i++)
-		test[i].getPromoterIF(fp,dict);
+	//luck.readTUPosition();
+	//luck.getGenePromoter(test);
+	//dict=luck.mapPromoter();
+	//for(int i=0;i<luck.getGeneAmount();i++)
+		//test[i].getPromoterIF(fp,dict);
+	ModleNetwork modle;
+	modle.Network_2(luck.originalGRN,luck.getTFAmount,luck.getGeneAmount);
+	cout<<modle.value[5]<<endl;
+	
 	getchar();
-	/*for(int i=0;i<luck.uncertain1.size();i++)
+	/*for(int i=0;i<luck.uncertain_row.size();i++)
 	{
-		cout<<luck.uncertain1[i]<<"	";
-		cout<<luck.uncertain2[i]<<endl;
+		cout<<luck.uncertain_row[i]<<"	";
+		cout<<luck.uncertain_column[i]<<endl;
 	}
 	cout<<luck.getGeneAmount()<<endl;
 	getchar();*/
@@ -78,15 +80,15 @@ int main()
 	//Calculate cal;
 	/*for(int i=0;i<N;i++)
 	{
-		happy.randomMax[i]=0;
-		happy.randomMin[i]=100;
+		happy.random_max[i]=0;
+		happy.random_min[i]=100;
 	}
 	for(int i=0;i<100;i++)
 		happy.getRange(luck.originalMatrix,luck.getGeneAmount(),cal);
 	ofstream file("Range");
 	for(int i=0;i<luck.getGeneAmount();i++)
 	{
-		file<<happy.randomMin[i]<<"	"<<happy.randomMax[i]<<endl;
+		file<<happy.random_min[i]<<"	"<<happy.random_max[i]<<endl;
 	}*/
 	/*happy.targetGene[156]=5.6;
 	happy.algorithm_PSO(luck.originalMatrix,happy.targetGene,luck.getGeneAmount(),cal);

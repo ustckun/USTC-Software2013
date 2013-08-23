@@ -22,6 +22,8 @@
 
 void GRN::initialize_GRN(double **old_GRN, int num_row, int num_column) {
     srand((unsigned)time(0));
+// TODO(jinyangustc@gmail.com): Delete random selection lines when finish
+//                              environment parameter input function.
     for (int i = 0; i != 1800; ++i) {
         for (int j = 0; j != 220; ++j) {
             //Chooses direction of regulation if it is +/-(2);

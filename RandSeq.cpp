@@ -1,11 +1,16 @@
-//
-//  RandSeq.cpp
-//  Random Sequence
-//
-//  Created by jinyang on 13-8-9.
-//  Copyright (c) 2013年 Li Jinyang. All rights reserved.
-//
-
+////////////////////////////////////////////////////////////////////////////////
+/// COPYRIGHT NOTICE\n
+/// Distribute under BSD License\n
+/// Copyright (c) 2013, iGEM Software Team of University of Science and
+/// Technology of China\n
+/// All rights reserved.
+///
+/// \file RandSeq.cpp
+/// \brief Statements of functions of class RandSeq
+/// \version 1.0
+/// \author Li Jinyang
+/// \date Aug. 9, 2013
+////////////////////////////////////////////////////////////////////////////////
 #include "RandSeq.h"
 #include <iostream>
 #include <ctime>

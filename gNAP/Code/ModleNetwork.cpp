@@ -315,7 +315,7 @@ void ModleNetwork::Network_1(double **ReguMatrix,int nx,int ny)
                 j=0;
             }
         }
-        for(i=0;i<1801;++i)
+        for(i=0;i<ny+1;++i)
         {
             poi=head;qoi=poi->next;
             while(qoi->next)

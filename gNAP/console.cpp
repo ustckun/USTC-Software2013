@@ -462,8 +462,18 @@ void console::sbol_clicked()
 {
     SBOL creat_SBOL;
     int m=result_ui->ui->choose->currentIndex();
-    string left=to_string(ecoli_k12[m].getLeftPosition());
-    string right=to_string(ecoli_k12[m].getRightPosition());
+    //string left=to_string(ecoli_k12[m].getLeftPosition());
+    string left;
+    stringstream ss_left;
+    ss_left<<ecoli_k12[m].getRightPosition();
+    ss_left>>left;
+    //string right=to_string(ecoli_k12[m].getRightPosition());
+    string right;
+    stringstream ss_right;
+    ss_right<<ecoli_k12[m].getRightPosition();
+    ss_right>>right;
+    //string left=to_string(ecoli_k12[m].getLeftPosition());
+    //string right=to_string(ecoli_k12[m].getRightPosition());
     creat_SBOL.CreatSBOL(ecoli_k12[m].getGeneName(),
                          ecoli_k12[m].getID(),
                          left,

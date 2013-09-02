@@ -1,0 +1,13 @@
+#define TFScale 220
+#define GENEAM 1800
+#define NN 100
+#define PETS 128
+#define STEP (1.0/PETS)
+#define MAXTIME 100
+#define INITIALVALUE 2.5
+#define PARTICLENUM 30
+#define minAccu 0.01
+#define Pmin -1
+#define Pmax 1
+#define Vmin -0.01
+#define Vmax 0.01

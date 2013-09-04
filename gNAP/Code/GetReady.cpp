@@ -1,22 +1,3 @@
-// GetReady.cpp
-// Get regualtion matrix and 166 genes' names
-//
-// version 2.0
-// change:
-// 1.add output to txt module
-// 2.add notation
-//
-//**********************************************************************************
-//this module read TF-TF regualtion from RegulonDB database
-//transform + - to +1 -1 and 0 if not relationships it will be 2
-//filter the name to class GeneIM::gene_name
-//**********************************************************************************
-//
-//interface:
-//int getGeneAmount():all gene number
-//float	originalMartix[200][200]:genes' regualtion
-//A to B 's regulation is originalMatrix[B][A]
-
 
 #include"GeneIM.h"
 #include"GetReady.h"
@@ -98,17 +79,13 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 		open_file_error=0;
 	char ch;
 	int i,num=0;
-	//int geneAM,TFAM=0;
 	char *Name;
 	char STRING1[GENEAM][10];
-	//double originalMA[N][N];
-	int unknow=0;
 	data.get(ch);
 	for(i=gene_amount;i<GENEAM;)
 	{
 		int a,b;
-		//data.get(ch);
-		while(ch=='#')//filter RegulonDB line
+		while(ch=='#')
 		{
 			string noUse;
 			getline(data,noUse);
@@ -125,7 +102,6 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 		int j;
 		for(j=0;j<i;j++)
 		{
-			//strlwr(temp_gene_IM[j].name);
             strlwr(Name);
 			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
@@ -153,7 +129,6 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 		Name=STRING1[i];
 		for(j=0;j<i;j++)
 		{
-			//strlwr(temp_gene_IM[j].name);
             strlwr(Name);
 			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
@@ -169,13 +144,14 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 			b=i;
 			i++;
 		}
-		//temp_gene_IM[i].putName();
 		data.get(ch);
 		if(ch=='-')
 		{
 			if(old_GRN[b][a]==1||old_GRN[b][a]==2)
 			{
-				old_GRN[b][a]=2;
+                if(old_GRN[b][a]!=2)
+                    uncertain<<"?\t"<<temp_gene_IM[b].getGeneName()<<"->"<<temp_gene_IM[a].getGeneName()<<endl;
+                old_GRN[b][a]=2;
 				uncertain_row.push_back(b);
 				uncertain_column.push_back(a);
 				unknow++;
@@ -191,6 +167,7 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 				old_GRN[b][a]=2;
 				uncertain_row.push_back(b);
 				uncertain_column.push_back(a);
+				uncertain<<"?\t"<<temp_gene_IM[b].getGeneName()<<"->"<<temp_gene_IM[a].getGeneName()<<endl;
 				unknow++;
 			}
 			else
@@ -206,17 +183,9 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 			gene_amount=i;
 			i=GENEAM;
 		}
-		//if(TFAM<a)
-			//TFAM=a;
-		//cout<<j<<endl;
 	}
-	//memcpy((char *)originalMatrix,(char *)originalMA,sizeof(double)*N*N);
-	//originalMatrix=originalMA;
-	//cout<<TFAM<<endl;
-	//gene_amount=geneAM;
 }
 
-//input:objexts of GeneIM, read name and also get regulation, if file is not open int open_file_error will be 1
 void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_address)
 {
     ifstream data(TF_TF_address.c_str());
@@ -228,17 +197,13 @@ void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_addr
 		open_file_error=0;
 	char ch;
 	int i,num=0;
-	//int geneAM,TFAM=0;
 	char *Name;
 	char STRING1[TFScale][10];
-	//double originalMA[N][N];
-	int unknow=0;
 	data.get(ch);
 	for(i=0;i<TFScale;)
 	{
 		int a,b;
-		//data.get(ch);
-		while(ch=='#')//filter RegulonDB line
+		while(ch=='#')
 		{
 			string noUse;
 			getline(data,noUse);
@@ -299,13 +264,14 @@ void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_addr
 			b=i;
 			i++;
 		}
-		//temp_gene_IM[i].putName();
 		data.get(ch);
 		if(ch=='-')
 		{
 			if(old_GRN[b][a]==1||old_GRN[b][a]==2)
 			{
-				old_GRN[b][a]=2;
+                if(old_GRN[b][a]!=2)
+                    uncertain<<"?\t"<<temp_gene_IM[b].getGeneName()<<"->"<<temp_gene_IM[a].getGeneName()<<endl;
+                old_GRN[b][a]=2;
 				uncertain_row.push_back(b);
 				uncertain_column.push_back(a);
 				unknow++;
@@ -321,6 +287,7 @@ void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_addr
 				old_GRN[b][a]=2;
 				uncertain_row.push_back(b);
 				uncertain_column.push_back(a);
+				uncertain<<"?\t"<<temp_gene_IM[b].getGeneName()<<"->"<<temp_gene_IM[a].getGeneName()<<endl;
 				unknow++;
 			}
 			else
@@ -336,17 +303,10 @@ void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_addr
 			TF_amount=i;
 			i=TFScale;
 		}
-		//if(TFAM<a)
-			//TFAM=a;
-		//cout<<j<<endl;
 	}
-	//memcpy((char *)originalMatrix,(char *)originalMA,sizeof(double)*N*N);
-	//originalMatrix=originalMA;
-	//cout<<TFAM<<endl;
 	gene_amount=TF_amount;
 }
 
-//full fill the matrix with 2
 GetReady::GetReady()
 {
 	originalGRN=new double*[GENEAM];
@@ -354,7 +314,8 @@ GetReady::GetReady()
 		originalGRN[i]=new double[TFScale];
 	gene_amount=0;
 	open_file_error=0;
-//	a=originalMatrix[0][0];
+    unknow=0;
+    uncertain.open("uncertain_database");
 	for(int n=0;n<TFScale;n++)
 	{
 		for(int m=0;m<GENEAM;m++)
@@ -364,13 +325,11 @@ GetReady::GetReady()
 	}
 }
 
-//get amount of genes
 int GetReady::getGeneAmount()
 {
 	return gene_amount;
 }
 
-//know is file opened
 int GetReady::getOpenError()
 {
 	return open_file_error;
@@ -380,12 +339,11 @@ map<string,string> GetReady::mapTFIM(string Gene_IM_address)
 {
 	map<string,string> dictTFIM;
     ifstream data(Gene_IM_address.c_str());
-	//ofstream text("Sequence");
 	char ch;
 	int i;
 	for(i=1;data.get(ch);i++)
 	{
-		while(ch=='#')//filter RegulonDB line
+		while(ch=='#')
 		{
 			string noUse;
 			getline(data,noUse);
@@ -393,7 +351,6 @@ map<string,string> GetReady::mapTFIM(string Gene_IM_address)
 		}
 		string line;
 		char sline[30];
-		//char cline[30];
 		getline(data,line);
 		int j;
 		for(j=0;line[j]!='(';j++)
@@ -405,7 +362,6 @@ map<string,string> GetReady::mapTFIM(string Gene_IM_address)
 		int p;
 		for(p=0;sline[p]!='	';p++)
 		{
-			//cline[p]=line[p];
 		}
 		char tempName[20];
 		string name;
@@ -416,11 +372,8 @@ map<string,string> GetReady::mapTFIM(string Gene_IM_address)
 		}
 		name=tempName;
 		dictTFIM[name]=line;
-		//cout<<i<<endl;
-		//tempName[0]='\0';
 	}
 	return dictTFIM;
-	//tempName="";
 }
 
 void GetReady::readTUPosition(string TU_position_address)
@@ -429,7 +382,7 @@ void GetReady::readTUPosition(string TU_position_address)
 	char ch;
 	for(;data.get(ch);)
 	{
-		while(ch=='#')//filter RegulonDB line
+		while(ch=='#')
 		{
 			string noUse;
 			getline(data,noUse);
@@ -492,11 +445,10 @@ map<string,string> GetReady::mapPromoter(string promoters_address)
 {
 	map<string,string> dictPromoter;
     ifstream data(promoters_address.c_str());
-	//ofstream text("Sequence");
 	char ch;
 	for(;data.get(ch);)
 	{
-		while(ch=='#')//filter RegulonDB line
+		while(ch=='#')
 		{
 			string noUse;
 			getline(data,noUse);
@@ -504,7 +456,6 @@ map<string,string> GetReady::mapPromoter(string promoters_address)
 		}
 		string line;
 		char nameLine[20];
-		//char cline[30];
 		getline(data,line);
 		int j,i;
 		for(j=0;line[j]!='	';j++){}
@@ -533,21 +484,23 @@ map<string,string> GetReady::mapPromoter(string promoters_address)
 		strupr(tempSequence);
 		string name=nameLine;
 		dictPromoter[name]=tempSequence;
-		//cout<<i<<endl;
-		//tempName[0]='\0';
 	}
 	return dictPromoter;
-	//tempName="";
 }
 
-void GetReady::debug()
+void GetReady::inputUncertainGene()
 {
-    for(int i=0;i<GENEAM;i++)
-    {
-        for(int j=0;j<TFScale;j++)
-        {
-            if(originalGRN[i][j]==2)
-                originalGRN[i][j]=0;
-        }
-    }
+	ifstream uncertain("uncertain_database");
+	char ch;
+	string del;
+	for(int i=0;uncertain.get(ch);i++)
+	{
+		if(ch=='+')
+			originalGRN[uncertain_row[i]][uncertain_column[i]]=1;
+		else if(ch=='-')
+			originalGRN[uncertain_row[i]][uncertain_column[i]]=-1;
+		else
+			originalGRN[uncertain_row[i]][uncertain_column[i]]=0;
+		getline(uncertain,del);
+	}
 }

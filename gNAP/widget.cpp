@@ -201,7 +201,7 @@ void Widget::on_Take_a_nap_clicked()
     ui->progress_bar_start->show();
     ui->Do->setText("Get Regu...");
     setup.getRegulationMatrix(ecoli,TF_TF_address,TF_Gene_address);
-    setup.debug();
+    setup.inputUncertainGene();
     int G_A=setup.getGeneAmount();
     ui->progress_bar_start->setMaximum(G_A*3+GENEAM);
     map<string,string> dict;
@@ -237,7 +237,7 @@ void Widget::on_Take_a_nap_clicked()
         all_info<<ecoli[i].gene_number<<'\t';
         all_info<<ecoli[i].getPromoterSequence()<<'\t';
         all_info<<ecoli[i].getGeneSequence()<<'\t';
-        all_info<<ecoli[i].getGeneName()<<'\t';
+        all_info<<ecoli[i].getGeneTrueName()<<'\t';
         all_info<<ecoli[i].getID()<<'\t';
         all_info<<ecoli[i].getLeftPosition()<<'\t';
         all_info<<ecoli[i].getRightPosition()<<'\t';

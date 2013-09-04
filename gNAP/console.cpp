@@ -209,7 +209,7 @@ void console::on_add_clicked()
     pick[n]->setStyleSheet("font: 87 18pt \"Arial\";");
     for(int i=0;i<row_number;i++)
     {
-        pick[n]->addItem(QString::fromStdString(ecoli_k12[i].getGeneName()));
+        pick[n]->addItem(QString::fromStdString(ecoli_k12[i].getGeneTrueName()));
     }
     pick[n]->setMaxVisibleItems(10);
     pick[n]->setEditable(true);
@@ -279,15 +279,15 @@ void console::on_predict_clicked()
     {
         if(predict_regu.edPick[i]>0.9)
         {
-            text=text+QString::fromStdString(ecoli_k12[i].getGeneName())+"->new"+'\t'
+            text=text+QString::fromStdString(ecoli_k12[i].getGeneTrueName())+"->new"+'\t'
                     +"+"+'\n';
         }
         if(predict_regu.edPick[i]<-0.9)
         {
-            text=text+QString::fromStdString(ecoli_k12[i].getGeneName())+"->new"+'\t'
+            text=text+QString::fromStdString(ecoli_k12[i].getGeneTrueName())+"->new"+'\t'
                     +"-"+'\n';
         }
-        temp_string=QString::fromStdString(ecoli_k12[i].getGeneName())+"->new"+'\t'
+        temp_string=QString::fromStdString(ecoli_k12[i].getGeneTrueName())+"->new"+'\t'
                 +QString::number(predict_regu.edPick[i])+"\n$>";
         ui->cout->insertPlainText(temp_string);
         ui->cout->moveCursor(QTextCursor::End);
@@ -297,15 +297,15 @@ void console::on_predict_clicked()
     {
         if(predict_regu.toPick[i]>0.9)
         {
-            text=text+"new->"+QString::fromStdString(ecoli_k12[i].getGeneName())+'\t'
+            text=text+"new->"+QString::fromStdString(ecoli_k12[i].getGeneTrueName())+'\t'
                     +"+"+'\n';
         }
         if(predict_regu.toPick[i]<-0.9)
         {
-            text=text+"new->"+QString::fromStdString(ecoli_k12[i].getGeneName())+'\t'
+            text=text+"new->"+QString::fromStdString(ecoli_k12[i].getGeneTrueName())+'\t'
                     +"-"+'\n';
         }
-        temp_string="new->"+QString::fromStdString(ecoli_k12[i].getGeneName())+'\t'
+        temp_string="new->"+QString::fromStdString(ecoli_k12[i].getGeneTrueName())+'\t'
                 +QString::number(predict_regu.toPick[i])+"\n$>";
         ui->cout->insertPlainText(temp_string);
         ui->cout->moveCursor(QTextCursor::End);
@@ -328,7 +328,7 @@ void console::on_result_clicked()
     result_ui->ui->analyze->show();
     for(int i=0;i<row_number;i++)
     {
-        result_ui->ui->choose->addItem(QString::fromStdString(ecoli_k12[i].getGeneName()));
+        result_ui->ui->choose->addItem(QString::fromStdString(ecoli_k12[i].getGeneTrueName()));
     }
     int star_number=0;
     if(best_score>0&&best_score<66)
@@ -384,7 +384,7 @@ void console::on_result_clicked()
     else
         result_ui->ui->up_down->setStyleSheet("border-image: url(:/picture/picture/to_eq.png);");
     QString temp_text,link;
-    temp_text="<br/>:<br/>:<br/>:<br/>:<br/>Gene Name:"+QString::fromStdString(ecoli_k12[choose_number].getGeneName())
+    temp_text="<br/>:<br/>:<br/>:<br/>:<br/>Gene Name:"+QString::fromStdString(ecoli_k12[choose_number].getGeneTrueName())
             +"<br/>RegulonDB ID:E"+QString::fromStdString(ecoli_k12[choose_number].getID())
             +"<br/>Promoter Name:"+QString::fromStdString(ecoli_k12[choose_number].getPromoterName())
             +"<br/>Left Position:"+QString::number(ecoli_k12[choose_number].getLeftPosition())
@@ -395,7 +395,7 @@ void console::on_result_clicked()
     QString html;
     html="<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Courier'; font-size:16pt; font-weight:72; font-style:normal;\"><p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br />"
             +temp_text+"</p>"
-            +"<a href=\""+link+"\" target=\"_blank\"><span style=\" text-decoration: underline; color:#ffffff;\">Click here for Info on RegulonDB</a>"
+            +"<a href=\""+link+"\" target=\"_blank\"><span style=\" text-decoration: underline; color:#ffffff;\">Click here for more Info on RegulonDB</a>"
             +"</body></html>";
     result_ui->ui->Information->setHtml(html);
     }
@@ -410,9 +410,9 @@ void console::on_result_clicked()
         for(int i=0;i<n+1;i++)
         {
             if(low_high[i]==0)
-                temp=temp+QString::fromStdString(ecoli_k12[pick[i]->currentIndex()].getGeneName())+"\tLow\n";
+                temp=temp+QString::fromStdString(ecoli_k12[pick[i]->currentIndex()].getGeneTrueName())+"\tLow\n";
             else
-                temp=temp+QString::fromStdString(ecoli_k12[pick[i]->currentIndex()].getGeneName())+"\tHigh\n";
+                temp=temp+QString::fromStdString(ecoli_k12[pick[i]->currentIndex()].getGeneTrueName())+"\tHigh\n";
         }
         result_ui->ui->target_gene->setText(temp);
         result_ui->ui->prediction->setText(text);
@@ -442,7 +442,7 @@ void console::done_clicked()
     else
         result_ui->ui->up_down->setStyleSheet("border-image: url(:/picture/picture/to_eq.png);");
     QString temp_text,link;
-    temp_text="<br/>:<br/>:<br/>:<br/>:<br/>Gene Name:"+QString::fromStdString(ecoli_k12[choose_number].getGeneName())
+    temp_text="<br/>:<br/>:<br/>:<br/>:<br/>Gene Name:"+QString::fromStdString(ecoli_k12[choose_number].getGeneTrueName())
             +"<br/>RegulonDB ID:E"+QString::fromStdString(ecoli_k12[choose_number].getID())
             +"<br/>Promoter Name:"+QString::fromStdString(ecoli_k12[choose_number].getPromoterName())
             +"<br/>Left Position:"+QString::number(ecoli_k12[choose_number].getLeftPosition())
@@ -453,7 +453,7 @@ void console::done_clicked()
     QString html;
     html="<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\"><html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">p, li { white-space: pre-wrap; }</style></head><body style=\" font-family:'Courier'; font-size:16pt; font-weight:72; font-style:normal;\"><p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br />"
             +temp_text+"</p>"
-            +"<a href=\""+link+"\" target=\"_blank\"><span style=\" text-decoration: underline; color:#ffffff;\">Click here for Info on RegulonDB</a>"
+            +"<a href=\""+link+"\" target=\"_blank\"><span style=\" text-decoration: underline; color:#ffffff;\">Click here for more Info on RegulonDB</a>"
             +"</body></html>";
     result_ui->ui->Information->setHtml(html);
 }
@@ -474,7 +474,7 @@ void console::sbol_clicked()
     ss_right>>right;
     //string left=to_string(ecoli_k12[m].getLeftPosition());
     //string right=to_string(ecoli_k12[m].getRightPosition());
-    creat_SBOL.CreatSBOL(ecoli_k12[m].getGeneName(),
+    creat_SBOL.CreatSBOL(ecoli_k12[m].getGeneTrueName(),
                          ecoli_k12[m].getID(),
                          left,
                          right,

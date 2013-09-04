@@ -37,7 +37,8 @@ HEADERS  += widget.h \
     Code/GRN.h \
     Code/GetReady.h \
     Code/GeneIM.h \
-    Code/define.h
+    Code/define.h \
+    Code/strlwr.h
 
 FORMS    += widget.ui \
     console.ui \

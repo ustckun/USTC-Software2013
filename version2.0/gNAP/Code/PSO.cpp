@@ -1,3 +1,17 @@
+////////////////////////////////////////////////////////////////////////////////
+/// COPYRIGHT NOTICE\n
+/// Distribute under BSD License\n
+/// Copyright (c) 2013, iGEM Software Team of University of Science and
+/// Technology of China\n
+/// All rights reserved.
+///
+/// \file PSO.cpp
+/// \brief Statments of funcions of the class PSO.
+/// \version 1.0
+/// \author Wang Chenkun
+/// \date September 2nd, 2013
+////////////////////////////////////////////////////////////////////////////////
+
 #include "PSO.h"
 
 PSO::PSO(ModleNetwork New, int row,int column)
@@ -105,9 +119,9 @@ int PSO::getMinLine(double A[GENEAM],int column)
 	return B;
 }
 
-void PSO::Filter(int n)
+void PSO::Filter(int row, int column)
 {
-	/*for(int i=0;i<n;i++)
+    /*for(int i=0;i<row;i++)
 	{
 		if(toBest[i]>0&&toBest[i]<0.2)
 			toPick[i]=1;
@@ -120,7 +134,7 @@ void PSO::Filter(int n)
 		else if(toBest[i]>0.8&&toBest[i]<1)
 			toPick[i]=5;
 	}
-	for(int i=0;i<n;i++)
+    for(int i=0;i<column;i++)
 	{
 		if(edBest[i]>0&&edBest[i]<0.2)
 			edPick[i]=1;

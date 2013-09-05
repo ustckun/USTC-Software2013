@@ -41,5 +41,11 @@
         <file>picture/up1.png</file>
         <file>picture/up2.png</file>
         <file>picture/up3.png</file>
+        <file>picture/Software-Logo_black.png</file>
+        <file>picture/Software-Logo_white.png</file>
+        <file>picture/teamlogo_black.png</file>
+        <file>picture/teamlogo_white.png</file>
+        <file>picture/teamlogo_white_small.png</file>
+        <file>picture/Software-Logo_white_small.png</file>
     </qresource>
 </RCC>

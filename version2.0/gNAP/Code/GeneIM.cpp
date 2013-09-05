@@ -1,3 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////
+/// COPYRIGHT NOTICE\n
+/// Distribute under BSD License\n
+/// Copyright (c) 2013, iGEM Software Team of University of Science and
+/// Technology of China\n
+/// All rights reserved.
+///
+/// \file GeneIM.cpp
+/// \brief Statments of funcions of the class GeneIM.
+/// \version 1.0
+/// \author Wang Chenkun
+/// \date September 2nd, 2013
+////////////////////////////////////////////////////////////////////////////////
 
 #include"GeneIM.h"
 
@@ -113,11 +126,6 @@ int GeneIM::getRightPosition()
 string GeneIM::getGeneSequence()
 {
 	return gene_sequence;
-}
-
-int GeneIM::getFileError()
-{
-	return get_error;
 }
 
 char *GeneIM::getGeneName()

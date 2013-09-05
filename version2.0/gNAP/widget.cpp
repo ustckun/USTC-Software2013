@@ -285,7 +285,7 @@ void Widget::on_Gene_done_clicked()
     }
     this->hide();
     console_ui->show();
-    if((int)promoter_sequence.size()<50&&(int)gene_sequence.size()<50)
+    if((int)promoter_sequence.size()<50||(int)gene_sequence.size()<50)
     {
         console_ui->ui->analyze->setStyleSheet("#analyze{border-image: url(:/picture/picture/gray1.png);color:white;font: 75 18pt \"Arial\";}#analyze:hover{border-image: url(:/picture/picture/gray2.png);}");
         console_ui->analyze_flag=1;

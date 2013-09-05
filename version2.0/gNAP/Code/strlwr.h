@@ -1,6 +1,8 @@
 #ifndef STRLWR
 #define STRLWR
-inline char* strlwr( char* str )
+#include <cctype>
+
+inline char* lwr( char* str )
 {
    char* orig = str;
    // process the string
@@ -8,7 +10,7 @@ inline char* strlwr( char* str )
        *str = tolower(*str);
    return orig;
 }
-inline char* strupr( char* str )
+inline char* upr( char* str )
 {
    char* orig = str;
    // process the string
@@ -16,14 +18,15 @@ inline char* strupr( char* str )
        *str = toupper(*str);
    return orig;
 }
-inline bool strcmp( char* str1, char * str2 )
+inline bool cmp( char* str1, char * str2 )
 {
    // process the string
-   for ( ; *str1 != '\0' && *str2 != '\0';){
+   for ( ; *str1 != '\0' && *str2 != '\0';)
+   {
+       if(*str1 != *str2) return 1;
        str1++;
        str2++;
-       if(*str1 != *str2) return 0;
    }
-   return 1;
+   return 0;
 }
 #endif

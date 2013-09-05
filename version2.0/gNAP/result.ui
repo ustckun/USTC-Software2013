@@ -37,44 +37,6 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QFrame" name="logo">
-    <property name="geometry">
-     <rect>
-      <x>120</x>
-      <y>200</y>
-      <width>230</width>
-      <height>140</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QFrame" name="logo_2">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>200</y>
-      <width>230</width>
-      <height>140</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-   </widget>
    <widget class="QPushButton" name="close">
     <property name="geometry">
      <rect>
@@ -127,7 +89,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QFrame" name="analyze">
+   <widget class="QWidget" name="analyze" native="true">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -135,12 +97,6 @@
       <width>361</width>
       <height>430</height>
      </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
     </property>
     <widget class="QLabel" name="analyze_head">
      <property name="geometry">
@@ -165,9 +121,9 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>80</y>
+       <y>69</y>
        <width>101</width>
-       <height>50</height>
+       <height>61</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -179,7 +135,8 @@
 </string>
      </property>
      <property name="text">
-      <string>SCORE</string>
+      <string>STABLE
+SCORE</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -361,8 +318,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>110</x>
        <y>70</y>
-       <width>51</width>
-       <height>41</height>
+       <width>45</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -393,8 +350,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>160</x>
        <y>70</y>
-       <width>51</width>
-       <height>41</height>
+       <width>45</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -412,8 +369,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>260</x>
        <y>70</y>
-       <width>51</width>
-       <height>41</height>
+       <width>45</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -431,8 +388,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>310</x>
        <y>70</y>
-       <width>51</width>
-       <height>41</height>
+       <width>45</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -450,8 +407,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>210</x>
        <y>70</y>
-       <width>51</width>
-       <height>41</height>
+       <width>45</width>
+       <height>45</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -468,7 +425,6 @@ p, li { white-space: pre-wrap; }
     <zorder>score</zorder>
     <zorder>star</zorder>
     <zorder>choose</zorder>
-    <zorder>Information</zorder>
     <zorder>done</zorder>
     <zorder>sbol</zorder>
     <zorder>up_down</zorder>
@@ -479,8 +435,9 @@ p, li { white-space: pre-wrap; }
     <zorder>star4</zorder>
     <zorder>star5</zorder>
     <zorder>star3</zorder>
+    <zorder>Information</zorder>
    </widget>
-   <widget class="QFrame" name="predict">
+   <widget class="QWidget" name="predict" native="true">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -491,12 +448,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="styleSheet">
      <string notr="true"/>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
     </property>
     <widget class="QLabel" name="predict_head">
      <property name="geometry">
@@ -572,7 +523,7 @@ p, li { white-space: pre-wrap; }
        <x>189</x>
        <y>79</y>
        <width>211</width>
-       <height>341</height>
+       <height>325</height>
       </rect>
      </property>
      <property name="styleSheet">
@@ -603,6 +554,22 @@ p, li { white-space: pre-wrap; }
       <enum>Qt::Vertical</enum>
      </property>
     </widget>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>470</y>
+      <width>171</width>
+      <height>57</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/picture/picture/Software-Logo_white_small.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
  </widget>

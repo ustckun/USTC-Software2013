@@ -1,3 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////
+/// COPYRIGHT NOTICE\n
+/// Distribute under BSD License\n
+/// Copyright (c) 2013, iGEM Software Team of University of Science and
+/// Technology of China\n
+/// All rights reserved.
+///
+/// \file GetReady.cpp
+/// \brief Statments of funcions of the class GetReady.
+/// \version 1.0
+/// \author Wang Chenkun
+/// \date September 2nd, 2013
+////////////////////////////////////////////////////////////////////////////////
 
 #include"GeneIM.h"
 #include"GetReady.h"
@@ -14,12 +27,6 @@ void GetReady::getRegulationMatrix(GeneIM temp_gene_IM[],string TF_TF_address,st
 void GetReady::addTF(GeneIM temp_gene_IM[],string TF_Gene_address)
 {
     ifstream data(TF_Gene_address.c_str());
-	if(!data)
-	{
-		open_file_error=1;
-	}
-	else
-		open_file_error=0;
 	char ch;
 	int i=gene_amount;
 	data.get(ch);
@@ -45,8 +52,8 @@ void GetReady::addTF(GeneIM temp_gene_IM[],string TF_Gene_address)
 		int j;
 		for(j=0;j<i;j++)
 		{
-            strlwr(Name);
-			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
+            lwr(Name);
+            if(cmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
 				j=i+1;
 			}
@@ -71,12 +78,6 @@ void GetReady::addTF(GeneIM temp_gene_IM[],string TF_Gene_address)
 void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_address)
 {
     ifstream data(TF_Gene_address.c_str());
-	if(!data)
-	{
-		open_file_error=1;
-	}
-	else
-		open_file_error=0;
 	char ch;
 	int i,num=0;
 	char *Name;
@@ -102,8 +103,8 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 		int j;
 		for(j=0;j<i;j++)
 		{
-            strlwr(Name);
-			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
+            lwr(Name);
+            if(cmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
 				a=j;
 				j=i+1;
@@ -129,8 +130,8 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 		Name=STRING1[i];
 		for(j=0;j<i;j++)
 		{
-            strlwr(Name);
-			if(strcmp(temp_gene_IM[j].gene_name,Name)==0)
+            lwr(Name);
+            if(cmp(temp_gene_IM[j].gene_name,Name)==0)
 			{
 				b=j;
 				j=i+1;
@@ -189,12 +190,6 @@ void GetReady::readTFGene(GeneIM temp_gene_IM[],double **old_GRN,string TF_Gene_
 void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_address)
 {
     ifstream data(TF_TF_address.c_str());
-	if(!data)
-	{
-		open_file_error=1;
-	}
-	else
-		open_file_error=0;
 	char ch;
 	int i,num=0;
 	char *Name;
@@ -220,9 +215,9 @@ void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_addr
 		int j;
 		for(j=0;j<i;j++)
 		{
-            strlwr(temp_gene_IM[j].name);
-            strlwr(Name);
-			if(strcmp(temp_gene_IM[j].name,Name)==0)
+            lwr(temp_gene_IM[j].name);
+            lwr(Name);
+            if(cmp(temp_gene_IM[j].name,Name)==0)
 			{
 				a=j;
 				j=i+1;
@@ -248,9 +243,9 @@ void GetReady::readTFTF(GeneIM temp_gene_IM[],double **old_GRN,string TF_TF_addr
 		Name=STRING1[i];
 		for(j=0;j<i;j++)
 		{
-            strlwr(temp_gene_IM[j].name);
-            strlwr(Name);
-			if(strcmp(temp_gene_IM[j].name,Name)==0)
+            lwr(temp_gene_IM[j].name);
+            lwr(Name);
+            if(cmp(temp_gene_IM[j].name,Name)==0)
 			{
 				b=j;
 				j=i+1;
@@ -312,8 +307,7 @@ GetReady::GetReady()
 	originalGRN=new double*[GENEAM];
 	for(int i=0;i<GENEAM;i++)
 		originalGRN[i]=new double[TFScale];
-	gene_amount=0;
-	open_file_error=0;
+    gene_amount=0;
     unknow=0;
     uncertain.open("uncertain_database");
 	for(int n=0;n<TFScale;n++)
@@ -328,11 +322,6 @@ GetReady::GetReady()
 int GetReady::getGeneAmount()
 {
 	return gene_amount;
-}
-
-int GetReady::getOpenError()
-{
-	return open_file_error;
 }
 
 map<string,string> GetReady::mapTFIM(string Gene_IM_address)
@@ -358,7 +347,7 @@ map<string,string> GetReady::mapTFIM(string Gene_IM_address)
 			sline[j]=line[j];
 		}
 		sline[j]='\0';
-        strlwr(sline);
+        lwr(sline);
 		int p;
 		for(p=0;sline[p]!='	';p++)
 		{
@@ -404,7 +393,7 @@ void GetReady::readTUPosition(string TU_position_address)
 		}
 		i++;
 		ProName[j]='\0';
-        strlwr(ProName);
+        lwr(ProName);
 		char TUPos[10];
 		for(j=0;line[i]!='	';j++)
 		{
@@ -466,7 +455,7 @@ map<string,string> GetReady::mapPromoter(string promoters_address)
 			j++;
 		}
 		nameLine[i]='\0';
-		strlwr(nameLine);
+        lwr(nameLine);
 		j++;
 		for(;line[j]!='	';j++){}
 		j++;
@@ -481,7 +470,7 @@ map<string,string> GetReady::mapPromoter(string promoters_address)
 			j++;
 		}
 		tempSequence[i]='\0';
-		strupr(tempSequence);
+        upr(tempSequence);
 		string name=nameLine;
 		dictPromoter[name]=tempSequence;
 	}

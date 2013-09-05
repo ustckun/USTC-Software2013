@@ -91,7 +91,7 @@ void console::on_analyze_clicked()
 {
     if(analyze_flag==1)
     {
-        ui->tips->setText("No sequences input. Please enter sequences in backword page.");
+        ui->tips->setText("No sequences input. Please enter sequences in backward page.");
     }
     else{
     if_analyze=1;
@@ -104,7 +104,7 @@ void console::on_analyze_clicked()
         old_GRN[i] = new double[TFScale];
     }
     ifstream infile;
-    ui->tips->setText("Reading gene regulation network...");
+    ui->tips->setText("Reading gene regulatory network...");
     infile.open("old_GRN");
     for (int i = 0; i != GENEAM; ++i) {
         for (int j = 0; j != TFScale; ++j) {
@@ -245,6 +245,12 @@ void console::on_add_clicked()
 
 void console::on_predict_clicked()
 {
+    if(n==-1)
+    {
+        ui->tips->setText("Please add TARGET gene above!");
+    }
+    else
+    {
     if_predict=1;
     ui->progress_bar->show();
     ui->progress_bar->setValue(0);
@@ -269,7 +275,7 @@ void console::on_predict_clicked()
         ui->cout->insertPlainText(temp_string);
         ui->progress_bar->setValue(ui->progress_bar->value()+10);
     }
-    ui->tips->setText("Runing PSO...");
+    ui->tips->setText("Running PSO...");
     temp_string="$>Using PSO to predict...\n$>";
     ui->cout->insertPlainText(temp_string);
     ui->progress_bar->setValue(ui->progress_bar->value()+10);
@@ -317,6 +323,7 @@ void console::on_predict_clicked()
     ui->cout->moveCursor(QTextCursor::End);
     ui->tips->setText("More information could be get in \"Result\"!");
     ui->progress_bar->hide();
+    }
 }
 
 void console::on_result_clicked()
